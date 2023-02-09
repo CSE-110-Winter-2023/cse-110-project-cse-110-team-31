@@ -3,6 +3,8 @@ package edu.ucsd.cse110.socialcompass;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -32,8 +34,22 @@ public class Compass extends AppCompatActivity implements LocationListener {
         getLocation();
     }
 
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    setupListener();
+                } else {
+                    TextView latLon = findViewById(R.id.LatLon);
+                    latLon.setText("Please enable permissions in settings");
+                }
+            });
+
     private void getLocation() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        setupListener();
+    }
+
+    private void setupListener() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -44,6 +60,10 @@ public class Compass extends AppCompatActivity implements LocationListener {
             // for ActivityCompat#requestPermissions for more details.
             TextView latLon = findViewById(R.id.LatLon);
             latLon.setText("no permission");
+            requestPermissionLauncher.launch(
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION);
+            requestPermissionLauncher.launch(
+                    android.Manifest.permission.ACCESS_FINE_LOCATION);
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, (float) 0, (LocationListener) this);
