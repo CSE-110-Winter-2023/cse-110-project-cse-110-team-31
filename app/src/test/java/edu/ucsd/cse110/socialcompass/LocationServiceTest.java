@@ -22,30 +22,24 @@ public class LocationServiceTest {
     @Rule
     public GrantPermissionRule coarsePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_COARSE_LOCATION);
 
-//    @Rule
-//    public ActivityScenarioRule<Compass> rule = new ActivityScenarioRule<>(Compass.class);
-
     @Test
     public void testLocationService() {
+        var mockDataSource = new MutableLiveData<Pair<Double, Double>>();
+
         var scenario = ActivityScenario.launch(Compass.class);
         scenario.moveToState(Lifecycle.State.STARTED);
 
-        var mockDataSource = new MutableLiveData<Pair<Double, Double>>();
-
         scenario.onActivity(activity -> {
-//            var locationService = LocationService.singleton(activity);
+            mockDataSource.setValue(new Pair<Double, Double>(45d, 55d));
+
             activity.locationService.setMockOrientationSource(mockDataSource);
+            activity.updateLocation();
 
             mockDataSource.setValue(new Pair<Double, Double>(45d, 55d));
 
             TextView latLon = activity.findViewById(R.id.LatLon);
 
-            System.out.println(latLon.getText());
-            assert latLon.getText() == "45.0, 55.0";
-
-//            System.out.println(activity.lat);
-//            assert activity.lat == 45d && activity.lon == 55d;
-//            assert 1==1;
+            assert activity.lat == 45.0d && activity.lon == 55.0d;
         });
     }
 }

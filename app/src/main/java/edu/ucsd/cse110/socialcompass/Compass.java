@@ -2,10 +2,12 @@ package edu.ucsd.cse110.socialcompass;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.MutableLiveData;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Pair;
 import android.widget.TextView;
 
 public class Compass extends AppCompatActivity {
@@ -25,11 +27,16 @@ public class Compass extends AppCompatActivity {
 
         locationService = LocationService.singleton(this);
 
+        updateLocation();
+    }
+
+    void updateLocation() {
         TextView latLon = findViewById(R.id.LatLon);
 
         locationService.getLocation().observe(this, loc -> {
             lat = loc.first;
             lon = loc.second;
+            // this will be removed when UI is added
             latLon.setText(lat + ", " + lon);
         });
     }
