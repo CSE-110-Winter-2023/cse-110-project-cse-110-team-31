@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 public class Compass extends AppCompatActivity {
-    private LocationService locationService;
+    public LocationService locationService;
+
+    double lat, lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +28,9 @@ public class Compass extends AppCompatActivity {
         TextView latLon = findViewById(R.id.LatLon);
 
         locationService.getLocation().observe(this, loc -> {
-            latLon.setText(Double.toString(loc.first) + ", " + Double.toString(loc.second));
+            lat = loc.first;
+            lon = loc.second;
+            latLon.setText(lat + ", " + lon);
         });
     }
 }
