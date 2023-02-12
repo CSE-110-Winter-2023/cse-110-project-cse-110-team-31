@@ -30,14 +30,10 @@ public class LocationServiceTest {
         scenario.moveToState(Lifecycle.State.STARTED);
 
         scenario.onActivity(activity -> {
-            mockDataSource.setValue(new Pair<Double, Double>(45d, 55d));
-
             activity.locationService.setMockOrientationSource(mockDataSource);
             activity.updateLocation();
 
-            mockDataSource.setValue(new Pair<Double, Double>(45d, 55d));
-
-            TextView latLon = activity.findViewById(R.id.LatLon);
+            mockDataSource.setValue(new Pair<>(45d, 55d));
 
             assert activity.lat == 45.0d && activity.lon == 55.0d;
         });
