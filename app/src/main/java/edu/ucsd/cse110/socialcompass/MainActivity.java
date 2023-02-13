@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onLaunchCompass(View view) {
-        Intent intent = new Intent(this, Compass.class);
+        Intent intent = new Intent(this, CompassActivity.class);
         startActivity(intent);
     }
 }

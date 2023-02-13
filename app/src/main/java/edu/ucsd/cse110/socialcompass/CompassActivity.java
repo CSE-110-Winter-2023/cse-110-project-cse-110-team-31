@@ -2,15 +2,13 @@ package edu.ucsd.cse110.socialcompass;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.MutableLiveData;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Pair;
 import android.widget.TextView;
 
-public class Compass extends AppCompatActivity {
+public class CompassActivity extends AppCompatActivity {
     public LocationService locationService;
 
     double lat, lon;

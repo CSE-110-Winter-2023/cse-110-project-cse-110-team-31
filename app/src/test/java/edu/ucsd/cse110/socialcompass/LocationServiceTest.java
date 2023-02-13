@@ -1,12 +1,10 @@
 package edu.ucsd.cse110.socialcompass;
 
 import android.util.Pair;
-import android.widget.TextView;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.test.core.app.ActivityScenario;
 import androidx.lifecycle.MutableLiveData;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Rule;
@@ -26,7 +24,7 @@ public class LocationServiceTest {
     public void testLocationService() {
         var mockDataSource = new MutableLiveData<Pair<Double, Double>>();
 
-        var scenario = ActivityScenario.launch(Compass.class);
+        var scenario = ActivityScenario.launch(CompassActivity.class);
         scenario.moveToState(Lifecycle.State.STARTED);
 
         scenario.onActivity(activity -> {
