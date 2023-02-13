@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class AddLocationsActivity extends AppCompatActivity {
 
     @Override
@@ -18,7 +20,6 @@ public class AddLocationsActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy(){
-        saveLocations();
         super.onDestroy();
     }
 
@@ -60,19 +61,31 @@ public class AddLocationsActivity extends AppCompatActivity {
         editor.putString("my_long", my_long_view.getText().toString());
         editor.putString("my_lat", my_lat_view.getText().toString());
 
-        // parent's home
         editor.putString("family_long", family_long_view.getText().toString());
         editor.putString("family_lat", family_lat_view.getText().toString());
 
-        // friend's home
         editor.putString("friend_long", friend_long_view.getText().toString());
         editor.putString("friend_lat", friend_lat_view.getText().toString());
 
         editor.apply();
     }
 
+    public boolean locationPairEntered(String key1, String key2) {
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        return (!preferences.getString(key1, "").equals("") &&
+                !preferences.getString(key2, "").equals(""));
+    }
+
+    public boolean atLeastOneLocationExists(){
+        return locationPairEntered("my_long", "my_lat") ||
+                locationPairEntered("family_long", "family_lat") ||
+                locationPairEntered("friend_long", "friend_lat");
+    }
 
     public void onSubmitClicked(View view) {
-        finish();
+        saveLocations();
+        if (atLeastOneLocationExists()) {
+            finish();
+        }
     }
 }
