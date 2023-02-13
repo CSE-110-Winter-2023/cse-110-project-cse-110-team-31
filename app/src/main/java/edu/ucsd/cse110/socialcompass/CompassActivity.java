@@ -6,7 +6,6 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.widget.TextView;
 
 public class CompassActivity extends AppCompatActivity {
     public LocationService locationService;
@@ -29,13 +28,10 @@ public class CompassActivity extends AppCompatActivity {
     }
 
     void updateLocation() {
-        TextView latLon = findViewById(R.id.LatLon);
 
         locationService.getLocation().observe(this, loc -> {
             lat = loc.first;
             lon = loc.second;
-            // this will be removed when UI is added
-            latLon.setText(lat + ", " + lon);
         });
     }
 }
