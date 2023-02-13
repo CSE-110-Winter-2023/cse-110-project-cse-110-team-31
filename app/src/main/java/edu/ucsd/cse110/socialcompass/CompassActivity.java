@@ -2,7 +2,6 @@ package edu.ucsd.cse110.socialcompass;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
@@ -15,9 +14,9 @@ public class CompassActivity extends AppCompatActivity {
 
     double lat, lon;
 
-    double friendLat = 32.9857, friendLon = -117.266;
-    double houseLat, houseLon;
-    double familyLat, familyLon;
+    double friendLat = 32.910044, friendLon = -117.146084;
+    double houseLat = 32.860239, houseLon = -117.229796;
+    double familyLat = 32.9881, familyLon = -117.2411;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +51,18 @@ public class CompassActivity extends AppCompatActivity {
     }
 
     void renderImage(ImageView image, double otherLat, double otherLon) {
-        double latDistance = lat - otherLat;
-        double lonDistance = lon - otherLon;
-        double degrees = Math.atan(lonDistance / latDistance)*180/Math.PI;
+        double degrees = angleFromCoordinate(lat, lon, otherLat, otherLon);
         System.out.println(degrees);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) image.getLayoutParams();
         layoutParams.circleAngle = (float)degrees;
         image.setLayoutParams(layoutParams);
+    }
+
+    private double angleFromCoordinate(double lat1, double long1, double lat2,
+                                       double long2) {
+        double brng = Math.atan2(lat1 - lat2, long1 - long2);
+        brng = brng * (180 / Math.PI);
+        brng = 360 - brng;
+        return brng - 90;
     }
 }
