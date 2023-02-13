@@ -52,17 +52,16 @@ public class CompassActivity extends AppCompatActivity {
 
     void renderImage(ImageView image, double otherLat, double otherLon) {
         double degrees = angleFromCoordinate(lat, lon, otherLat, otherLon);
-        System.out.println(degrees);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) image.getLayoutParams();
         layoutParams.circleAngle = (float)degrees;
         image.setLayoutParams(layoutParams);
     }
 
-    private double angleFromCoordinate(double lat1, double long1, double lat2,
+    public static double angleFromCoordinate(double lat1, double long1, double lat2,
                                        double long2) {
         double brng = Math.atan2(lat1 - lat2, long1 - long2);
         brng = brng * (180 / Math.PI);
         brng = 360 - brng;
-        return brng - 90;
+        return (brng - 90 + 360) % 360;
     }
 }
