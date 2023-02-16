@@ -10,8 +10,8 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 public class CompassActivity extends AppCompatActivity {
-    private LocationService locationService;
-    private OrientationService orientationService;
+    public LocationService locationService;
+    public OrientationService orientationService;
 
     double lat, lon;
     double orient;
