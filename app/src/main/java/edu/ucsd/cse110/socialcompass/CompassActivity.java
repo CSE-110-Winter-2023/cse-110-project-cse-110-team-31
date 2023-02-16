@@ -10,9 +10,11 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 public class CompassActivity extends AppCompatActivity {
-    public LocationService locationService;
+    private LocationService locationService;
+    private OrientationService orientationService;
 
     double lat, lon;
+    double orient;
 
     double friendLat = 32.910044, friendLon = -117.146084;
     double houseLat = 32.860239, houseLon = -117.229796;
@@ -29,8 +31,17 @@ public class CompassActivity extends AppCompatActivity {
         }
 
         locationService = LocationService.singleton(this);
+        orientationService = OrientationService.singleton(this);
 
         updateLocation();
+        updateOrientation();
+    }
+
+    void updateOrientation() {
+        orientationService.getOrientation().observe(this, orientation -> {
+            orient = orientation;
+            setImageDirections();
+        });
     }
 
     void updateLocation() {
@@ -53,7 +64,7 @@ public class CompassActivity extends AppCompatActivity {
     void renderImage(ImageView image, double otherLat, double otherLon) {
         double degrees = angleFromCoordinate(lat, lon, otherLat, otherLon);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) image.getLayoutParams();
-        layoutParams.circleAngle = (float)degrees;
+        layoutParams.circleAngle = (float)(degrees+orient*(180 / Math.PI));
         image.setLayoutParams(layoutParams);
     }
 
