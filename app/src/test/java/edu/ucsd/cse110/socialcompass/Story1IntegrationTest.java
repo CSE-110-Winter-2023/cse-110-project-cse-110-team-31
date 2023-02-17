@@ -60,6 +60,7 @@ public class Story1IntegrationTest {
             activity.locationService.setMockOrientationSource(mockDataSource);
             activity.updateLocation();
 
+            activity.orient = 0;
             mockDataSource.setValue(new Pair<>(0d, 5d));
 
             var friendIcon = activity.findViewById(R.id.friend);
