@@ -41,6 +41,7 @@ public class Story2IntegrationTest {
             activity.houseLat = 10;
             activity.houseLon = 5; // straight up
 
+            mockOrientation.setValue(0f);
             mockLocation.setValue(new Pair<>(5d, 5d));
 
             ImageView friend = activity.findViewById(R.id.friend);

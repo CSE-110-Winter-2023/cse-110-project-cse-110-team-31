@@ -14,7 +14,7 @@ public class CompassActivity extends AppCompatActivity {
     public OrientationService orientationService;
 
     double lat, lon;
-    double orient;
+    double orient = 0;
 
     double friendLat = 32.910044, friendLon = -117.146084;
     double houseLat = 32.860239, houseLon = -117.229796;
