@@ -7,138 +7,192 @@
     tools:context=".AddLocationsActivity">
 
     <EditText
-        android:id="@+id/latitude3_view"
+        android:id="@+id/friend_label_view"
         android:layout_width="74dp"
         android:layout_height="35dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="36dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="40dp"
         android:ems="10"
-        android:hint="Latitude"
-        android:inputType="number"
+        android:hint="Label"
+        android:inputType="text"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/longitude3_view"
-        app:layout_constraintTop_toBottomOf="@+id/latitude2_view" />
+        app:layout_constraintTop_toBottomOf="@+id/friend_lat_view" />
 
     <EditText
-        android:id="@+id/longitude2_view"
+        android:id="@+id/family_long_view"
         android:layout_width="74dp"
         android:layout_height="35dp"
-        android:layout_marginStart="89dp"
-        android:layout_marginTop="37dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="52dp"
         android:ems="10"
         android:hint="Longitude"
         android:inputType="number"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/latitude2_view"
-        app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/longitude1_view" />
+        app:layout_constraintEnd_toStartOf="@+id/longitude2_view"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <EditText
-        android:id="@+id/longitude3_view"
+        android:id="@+id/family_lat_view"
         android:layout_width="74dp"
         android:layout_height="35dp"
-        android:layout_marginStart="54dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="16dp"
-        android:ems="10"
-        android:hint="Longitude"
-        android:inputType="number"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/latitude3_view"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/longitude2_view" />
-
-    <EditText
-        android:id="@+id/longitude1_view"
-        android:layout_width="74dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="87dp"
-        android:layout_marginTop="105dp"
-        android:layout_marginEnd="17dp"
-        android:layout_marginBottom="37dp"
-        android:ems="10"
-        android:hint="Longitude"
-        android:inputType="number"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/longitude2_view"
-        app:layout_constraintEnd_toStartOf="@+id/latitude1_view"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/latitude1_view"
-        android:layout_width="74dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="105dp"
-        android:layout_marginEnd="36dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="52dp"
         android:ems="10"
         android:hint="Latitude"
         android:inputType="number"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/longitude1_view"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/friend_lat_view"
+        app:layout_constraintTop_toBottomOf="@+id/family_long_view" />
 
     <EditText
-        android:id="@+id/latitude2_view"
+        android:id="@+id/home_label_view"
         android:layout_width="74dp"
         android:layout_height="35dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="37dp"
-        android:layout_marginEnd="36dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="56dp"
         android:ems="10"
-        android:hint="Latitude"
-        android:inputType="number"
+        android:hint="Label"
+        android:inputType="text"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/longitude2_view"
-        app:layout_constraintTop_toBottomOf="@+id/latitude1_view" />
+        app:layout_constraintEnd_toStartOf="@+id/family_label_view"
+        app:layout_constraintTop_toBottomOf="@+id/home_lat_view" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="105dp"
+        android:layout_width="96dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="32dp"
         android:text="Current Home"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="47dp"
-        android:text="Family Home"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="58dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="18dp"
         android:text="Best Friend's Home"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+
+    <EditText
+        android:id="@+id/longitude2_view"
+        android:layout_width="74dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="44dp"
+        android:ems="10"
+        android:hint="Longitude"
+        android:inputType="number"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <EditText
+        android:id="@+id/home_long_view"
+        android:layout_width="74dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="52dp"
+        android:ems="10"
+        android:hint="Longitude"
+        android:inputType="number"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/family_long_view"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <EditText
+        android:id="@+id/family_label_view"
+        android:layout_width="74dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="56dp"
+        android:ems="10"
+        android:hint="Label"
+        android:inputType="text"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/friend_label_view"
+        app:layout_constraintTop_toBottomOf="@+id/family_lat_view" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="25dp"
+        android:text="Family Home"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+
+    <EditText
+        android:id="@+id/home_lat_view"
+        android:layout_width="74dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="52dp"
+        android:ems="10"
+        android:hint="Latitude"
+        android:inputType="number"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/family_lat_view"
+        app:layout_constraintTop_toBottomOf="@+id/home_long_view" />
+
+    <EditText
+        android:id="@+id/friend_lat_view"
+        android:layout_width="74dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="47dp"
+        android:ems="10"
+        android:hint="Latitude"
+        android:inputType="number"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/longitude2_view" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="290dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="61dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Enter The Following GPS Locations"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/submit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="149dp"
-        android:layout_marginTop="214dp"
-        android:layout_marginEnd="171dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="160dp"
         android:onClick="onSubmitClicked"
         android:text="SUBMIT"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/longitude3_view" />
+        app:layout_constraintTop_toBottomOf="@+id/note_optional_view" />
+
+    <TextView
+        android:id="@+id/note_optional_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="94dp"
+        android:layout_marginTop="74dp"
+        android:layout_marginEnd="95dp"
+        android:text="ToolTip: Labels are entirely optional"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/home_label_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

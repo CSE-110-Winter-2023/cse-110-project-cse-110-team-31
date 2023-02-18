@@ -22,7 +22,7 @@ public class AddLocationsIntegrationTests {
         scenario.moveToState(Lifecycle.State.STARTED);
 
         scenario.onActivity(activity -> {
-            TextView my_long_view = (TextView) activity.findViewById(R.id.longitude1_view);
+            TextView my_long_view = (TextView) activity.findViewById(R.id.family_long_view);
             Button submit_button = (Button) activity.findViewById(R.id.submit_button);
             my_long_view.setText("1");
             submit_button.performClick();
@@ -33,7 +33,7 @@ public class AddLocationsIntegrationTests {
         scenario2.moveToState(Lifecycle.State.STARTED);
 
         scenario2.onActivity(activity2 -> {
-            TextView my_long_view = (TextView) activity2.findViewById(R.id.longitude1_view);
+            TextView my_long_view = (TextView) activity2.findViewById(R.id.family_long_view);
             assertEquals("1", my_long_view.getText().toString());
         });
 
@@ -47,9 +47,9 @@ public class AddLocationsIntegrationTests {
         scenario.moveToState(Lifecycle.State.STARTED);
 
         scenario.onActivity(activity -> {
-            TextView my_long_view = (TextView) activity.findViewById(R.id.longitude1_view);
+            TextView my_long_view = (TextView) activity.findViewById(R.id.family_long_view);
             TextView my_long2_view = (TextView) activity.findViewById(R.id.longitude2_view);
-            TextView my_lat3_view = (TextView) activity.findViewById(R.id.latitude3_view);
+            TextView my_lat3_view = (TextView) activity.findViewById(R.id.family_lat_view);
             Button submit_button = (Button) activity.findViewById(R.id.submit_button);
 
             my_long_view.setText("1");
@@ -62,9 +62,9 @@ public class AddLocationsIntegrationTests {
             scenario2.moveToState(Lifecycle.State.STARTED);
 
             scenario2.onActivity(activity2 -> {
-                TextView my_long_view_2 = (TextView) activity2.findViewById(R.id.longitude1_view);
+                TextView my_long_view_2 = (TextView) activity2.findViewById(R.id.family_long_view);
                 TextView my_long2_view_2 = (TextView) activity2.findViewById(R.id.longitude2_view);
-                TextView my_lat3_view_2 = (TextView) activity2.findViewById(R.id.latitude3_view);
+                TextView my_lat3_view_2 = (TextView) activity2.findViewById(R.id.family_lat_view);
                 assertEquals("1", my_long_view_2.getText().toString());
                 assertEquals("2", my_long2_view_2.getText().toString());
                 assertEquals("3", my_lat3_view_2.getText().toString());
@@ -80,7 +80,7 @@ public class AddLocationsIntegrationTests {
         scenario.moveToState(Lifecycle.State.STARTED);
 
         scenario.onActivity(activity -> {
-            TextView my_long_view = (TextView) activity.findViewById(R.id.longitude1_view);
+            TextView my_long_view = (TextView) activity.findViewById(R.id.family_long_view);
             Button submit_button = (Button) activity.findViewById(R.id.submit_button);
             my_long_view.setText("1");
             submit_button.performClick();
@@ -116,7 +116,7 @@ public class AddLocationsIntegrationTests {
         scenario.moveToState(Lifecycle.State.STARTED);
 
         scenario.onActivity(activity -> {
-            TextView my_long_view = (TextView) activity.findViewById(R.id.longitude1_view);
+            TextView my_long_view = (TextView) activity.findViewById(R.id.family_long_view);
             Button submit_button = (Button) activity.findViewById(R.id.submit_button);
             my_long_view.setText("1");
             scenario.moveToState(Lifecycle.State.DESTROYED);
@@ -127,7 +127,7 @@ public class AddLocationsIntegrationTests {
         scenario2.moveToState(Lifecycle.State.STARTED);
 
         scenario.onActivity(activity -> {
-            TextView my_long_view = (TextView) activity.findViewById(R.id.longitude1_view);
+            TextView my_long_view = (TextView) activity.findViewById(R.id.family_long_view);
             assertEquals("", my_long_view.getText().toString());
         });
 
