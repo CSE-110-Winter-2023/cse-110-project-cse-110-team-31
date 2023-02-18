@@ -10,6 +10,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent add_locations_activity = new Intent(this, AddLocationsActivity.class);
+        startActivity(add_locations_activity);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
