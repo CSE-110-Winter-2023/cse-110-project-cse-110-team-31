@@ -37,6 +37,7 @@ public class CompassActivity extends AppCompatActivity {
         getLocations();
         updateLocation();
         updateOrientation();
+        System.out.println(friendLat);
     }
 
     void updateOrientation() {
@@ -55,17 +56,22 @@ public class CompassActivity extends AppCompatActivity {
     }
 
     public void getLocations(){
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences("Locations", MODE_PRIVATE);
 
-        if(preferences.getAll().containsKey("my_long"))  houseLon = preferences.getFloat("my_long", (float)0);
-        if(preferences.getAll().containsKey("my_lat"))  houseLat = preferences.getFloat("my_lat", (float)0);
+        try {
+            if(preferences.getAll().containsKey("my_long"))  houseLon = preferences.getFloat("my_long", (float)0);
+            if(preferences.getAll().containsKey("my_lat"))  houseLat = preferences.getFloat("my_lat", (float)0);
 
-        if(preferences.getAll().containsKey("friend_long"))  friendLon = preferences.getFloat("friend_long", (float)0);
-        if(preferences.getAll().containsKey("friend_lat"))  friendLat = preferences.getFloat("friend_lat", (float)0);
+            if(preferences.getAll().containsKey("friend_long"))  friendLon = preferences.getFloat("friend_long", (float)0);
+            if(preferences.getAll().containsKey("friend_long"))  friendLat = preferences.getFloat("friend_lat", (float)0);
 
-        if(preferences.getAll().containsKey("family_long"))  familyLon = preferences.getFloat("family_long", (float)0);
-        if(preferences.getAll().containsKey("family_lat"))  familyLat = preferences.getFloat("family_lat", (float)0);
+            if(preferences.getAll().containsKey("family_long"))  familyLon = preferences.getFloat("family_long", (float)0);
+            if(preferences.getAll().containsKey("family_lat"))  familyLat = preferences.getFloat("family_lat", (float)0);
+        } catch(Exception e) {
+            System.out.println("Parse error");
+        }
 
+        System.out.println(friendLat+" "+friendLon);
 
         String home_label = preferences.getString("home_label", "");
         String friend_label = preferences.getString("friend_label", "");

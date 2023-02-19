@@ -55,7 +55,7 @@ public class AddLocationsActivity extends AppCompatActivity {
     }
 
     public void saveLocations() {
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences("Locations", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
 
         TextView my_long_view = findViewById(R.id.family_long_view);
@@ -68,14 +68,14 @@ public class AddLocationsActivity extends AppCompatActivity {
         TextView friend_label_view = findViewById(R.id.friend_label_view);
         TextView family_label_view = findViewById(R.id.family_label_view);
 
-        editor.putString("my_long", my_long_view.getText().toString());
-        editor.putString("my_lat", my_lat_view.getText().toString());
+        editor.putFloat("my_long", Float.parseFloat(my_long_view.getText().toString()));
+        editor.putFloat("my_lat", Float.parseFloat(my_lat_view.getText().toString()));
 
-        editor.putString("family_long", family_long_view.getText().toString());
-        editor.putString("family_lat", family_lat_view.getText().toString());
+        editor.putFloat("family_long", Float.parseFloat(family_long_view.getText().toString()));
+        editor.putFloat("family_lat", Float.parseFloat(family_lat_view.getText().toString()));
 
-        editor.putString("friend_long", friend_long_view.getText().toString());
-        editor.putString("friend_lat", friend_lat_view.getText().toString());
+        editor.putFloat("friend_long", Float.parseFloat(friend_long_view.getText().toString()));
+        editor.putFloat("friend_lat", Float.parseFloat(friend_lat_view.getText().toString()));
 
         editor.putString("home_label", home_label_view.getText().toString());
         editor.putString("family_label", family_label_view.getText().toString());
