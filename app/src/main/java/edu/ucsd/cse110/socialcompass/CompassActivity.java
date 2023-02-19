@@ -5,6 +5,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -16,9 +17,9 @@ public class CompassActivity extends AppCompatActivity {
     double lat, lon;
     double orient = 0;
 
-    double friendLat = 32.910044, friendLon = -117.146084;
-    double houseLat = 32.860239, houseLon = -117.229796;
-    double familyLat = 32.9881, familyLon = -117.2411;
+    double friendLat, friendLon;
+    double houseLat, houseLon;
+    double familyLat, familyLon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,7 @@ public class CompassActivity extends AppCompatActivity {
         locationService = LocationService.singleton(this);
         orientationService = OrientationService.singleton(this);
 
+        getLocations();
         updateLocation();
         updateOrientation();
     }
@@ -42,6 +44,32 @@ public class CompassActivity extends AppCompatActivity {
             orient = orientation;
             setImageDirections();
         });
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        getLocations();
+        setImageDirections();
+    }
+
+    public void getLocations(){
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+
+        if(preferences.getAll().containsKey("my_long"))  houseLon = preferences.getFloat("my_long", (float)0);
+        if(preferences.getAll().containsKey("my_lat"))  houseLat = preferences.getFloat("my_lat", (float)0);
+
+        if(preferences.getAll().containsKey("friend_long"))  friendLon = preferences.getFloat("friend_long", (float)0);
+        if(preferences.getAll().containsKey("friend_lat"))  friendLat = preferences.getFloat("friend_lat", (float)0);
+
+        if(preferences.getAll().containsKey("family_long"))  familyLon = preferences.getFloat("family_long", (float)0);
+        if(preferences.getAll().containsKey("family_lat"))  familyLat = preferences.getFloat("family_lat", (float)0);
+
+
+        String home_label = preferences.getString("home_label", "");
+        String friend_label = preferences.getString("friend_label", "");
+        String family_label = preferences.getString("family_label", "");
     }
 
     void updateLocation() {
