@@ -156,16 +156,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/longitude2_view" />
 
-    <EditText
+    <TextView
         android:id="@+id/editTextTextPersonName"
-        android:layout_width="290dp"
-        android:layout_height="48dp"
+        android:layout_width="336dp"
+        android:layout_height="39dp"
         android:layout_marginStart="60dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="61dp"
+        android:layout_marginEnd="60dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:gravity="center"
         android:text="Enter The Following GPS Locations"
+        android:textSize="18dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
