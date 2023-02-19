@@ -29,7 +29,7 @@
         android:hint="Longitude"
         android:inputType="numberSigned|numberDecimal"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/longitude2_view"
+        app:layout_constraintEnd_toStartOf="@+id/friend_long_view"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <EditText
@@ -81,7 +81,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
 
     <EditText
-        android:id="@+id/longitude2_view"
+        android:id="@+id/friend_long_view"
         android:layout_width="74dp"
         android:layout_height="35dp"
         android:layout_marginTop="28dp"
@@ -154,7 +154,7 @@
         android:inputType="numberSigned|numberDecimal"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/longitude2_view" />
+        app:layout_constraintTop_toBottomOf="@+id/friend_long_view" />
 
     <EditText
         android:id="@+id/editTextTextPersonName"

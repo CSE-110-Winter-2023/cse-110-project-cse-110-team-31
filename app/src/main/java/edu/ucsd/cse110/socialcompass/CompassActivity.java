@@ -17,6 +17,7 @@ public class CompassActivity extends AppCompatActivity {
     double lat, lon;
     double orient = 0;
 
+    boolean houseDisplay, friendDisplay, familyDisplay;
     double friendLat, friendLon;
     double houseLat, houseLon;
     double familyLat, familyLon;
@@ -58,20 +59,25 @@ public class CompassActivity extends AppCompatActivity {
     public void getLocations(){
         SharedPreferences preferences = getSharedPreferences("Locations", MODE_PRIVATE);
 
+        houseDisplay=true;
+        friendDisplay=true;
+        familyDisplay=true;
+
         try {
+            if((!preferences.contains("my_long")||(!preferences.contains("my_lat")))) houseDisplay = false;
             if(preferences.getAll().containsKey("my_long"))  houseLon = preferences.getFloat("my_long", (float)0);
             if(preferences.getAll().containsKey("my_lat"))  houseLat = preferences.getFloat("my_lat", (float)0);
 
+            if((!preferences.contains("friend_long")||(!preferences.contains("friend_lat")))) friendDisplay = false;
             if(preferences.getAll().containsKey("friend_long"))  friendLon = preferences.getFloat("friend_long", (float)0);
             if(preferences.getAll().containsKey("friend_long"))  friendLat = preferences.getFloat("friend_lat", (float)0);
 
+            if((!preferences.contains("family_long")||(!preferences.contains("family_lat")))) familyDisplay = false;
             if(preferences.getAll().containsKey("family_long"))  familyLon = preferences.getFloat("family_long", (float)0);
             if(preferences.getAll().containsKey("family_lat"))  familyLat = preferences.getFloat("family_lat", (float)0);
         } catch(Exception e) {
             System.out.println("Parse error");
         }
-
-        System.out.println(friendLat+" "+friendLon);
 
         String home_label = preferences.getString("home_label", "");
         String friend_label = preferences.getString("friend_label", "");
