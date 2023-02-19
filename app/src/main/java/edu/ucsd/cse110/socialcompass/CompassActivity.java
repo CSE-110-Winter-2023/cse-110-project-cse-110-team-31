@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class CompassActivity extends AppCompatActivity {
     public LocationService locationService;
@@ -79,9 +80,17 @@ public class CompassActivity extends AppCompatActivity {
             System.out.println("Parse error");
         }
 
-        String home_label = preferences.getString("home_label", "");
+        String house_label = preferences.getString("home_label", "");
         String friend_label = preferences.getString("friend_label", "");
         String family_label = preferences.getString("family_label", "");
+
+        TextView house_label_view = findViewById(R.id.house_label_view);
+        TextView friend_label_view = findViewById(R.id.friend_label_view);
+        TextView family_label_view = findViewById(R.id.family_label_view);
+
+        house_label_view.setText(house_label);
+        friend_label_view.setText(friend_label);
+        family_label_view.setText(family_label);
     }
 
     void updateLocation() {
