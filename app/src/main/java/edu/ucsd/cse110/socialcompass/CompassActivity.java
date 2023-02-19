@@ -1,5 +1,7 @@
 package edu.ucsd.cse110.socialcompass;
 
+import static android.view.View.INVISIBLE;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -91,6 +93,25 @@ public class CompassActivity extends AppCompatActivity {
         house_label_view.setText(house_label);
         friend_label_view.setText(friend_label);
         family_label_view.setText(family_label);
+
+        ImageView house_icon = findViewById(R.id.house);
+        ImageView friend_icon = findViewById(R.id.friend);
+        ImageView family_icon = findViewById(R.id.family);
+
+        if(!houseDisplay) {
+            house_icon.setVisibility(INVISIBLE);
+            house_label_view.setVisibility(INVISIBLE);
+        }
+
+        if(!friendDisplay) {
+            friend_icon.setVisibility(INVISIBLE);
+            friend_label_view.setVisibility(INVISIBLE);
+        }
+
+        if(!familyDisplay) {
+            family_icon.setVisibility(INVISIBLE);
+            family_label_view.setVisibility(INVISIBLE);
+        }
     }
 
     void updateLocation() {
