@@ -2,6 +2,7 @@ package edu.ucsd.cse110.socialcompass;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -88,9 +89,9 @@ public class AddLocationsActivity extends AppCompatActivity {
     }
 
     public boolean locationPairEntered(String key1, String key2) {
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        return (!preferences.getString(key1, "").equals("") &&
-                !preferences.getString(key2, "").equals(""));
+        SharedPreferences preferences = getSharedPreferences("Locations", MODE_PRIVATE);
+        return (preferences.contains(key1) &&
+                preferences.contains(key2));
     }
 
     public boolean atLeastOneLocationExists(){
@@ -103,9 +104,15 @@ public class AddLocationsActivity extends AppCompatActivity {
         saveLocations();
         if (atLeastOneLocationExists()) {
             Intent intent = new Intent(this, CompassActivity.class);// New activity
-            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
+        } else {
+            AlertDialog alertDialog = new AlertDialog.Builder(AddLocationsActivity.this).create();
+            alertDialog.setTitle("Alert");
+            alertDialog.setMessage("Must enter at least 1 location");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    (dialog, which) -> dialog.dismiss());
+            alertDialog.show();
         }
     }
 }
