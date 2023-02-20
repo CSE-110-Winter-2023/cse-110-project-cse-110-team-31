@@ -1,5 +1,7 @@
 package edu.ucsd.cse110.socialcompass;
 
+import static android.view.View.INVISIBLE;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -9,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class CompassActivity extends AppCompatActivity {
     public LocationService locationService;
@@ -17,6 +20,7 @@ public class CompassActivity extends AppCompatActivity {
     double lat, lon;
     double orient = 0;
 
+    boolean houseDisplay, friendDisplay, familyDisplay;
     double friendLat, friendLon;
     double houseLat, houseLon;
     double familyLat, familyLon;
@@ -37,6 +41,7 @@ public class CompassActivity extends AppCompatActivity {
         getLocations();
         updateLocation();
         updateOrientation();
+        System.out.println(friendLat);
     }
 
     void updateOrientation() {
@@ -55,21 +60,58 @@ public class CompassActivity extends AppCompatActivity {
     }
 
     public void getLocations(){
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences("Locations", MODE_PRIVATE);
 
-        if(preferences.getAll().containsKey("my_long"))  houseLon = preferences.getFloat("my_long", (float)0);
-        if(preferences.getAll().containsKey("my_lat"))  houseLat = preferences.getFloat("my_lat", (float)0);
+        houseDisplay=true;
+        friendDisplay=true;
+        familyDisplay=true;
 
-        if(preferences.getAll().containsKey("friend_long"))  friendLon = preferences.getFloat("friend_long", (float)0);
-        if(preferences.getAll().containsKey("friend_lat"))  friendLat = preferences.getFloat("friend_lat", (float)0);
+        try {
+            if((!preferences.contains("my_long")||(!preferences.contains("my_lat")))) houseDisplay = false;
+            if(preferences.getAll().containsKey("my_long"))  houseLon = preferences.getFloat("my_long", (float)0);
+            if(preferences.getAll().containsKey("my_lat"))  houseLat = preferences.getFloat("my_lat", (float)0);
 
-        if(preferences.getAll().containsKey("family_long"))  familyLon = preferences.getFloat("family_long", (float)0);
-        if(preferences.getAll().containsKey("family_lat"))  familyLat = preferences.getFloat("family_lat", (float)0);
+            if((!preferences.contains("friend_long")||(!preferences.contains("friend_lat")))) friendDisplay = false;
+            if(preferences.getAll().containsKey("friend_long"))  friendLon = preferences.getFloat("friend_long", (float)0);
+            if(preferences.getAll().containsKey("friend_long"))  friendLat = preferences.getFloat("friend_lat", (float)0);
 
+            if((!preferences.contains("family_long")||(!preferences.contains("family_lat")))) familyDisplay = false;
+            if(preferences.getAll().containsKey("family_long"))  familyLon = preferences.getFloat("family_long", (float)0);
+            if(preferences.getAll().containsKey("family_lat"))  familyLat = preferences.getFloat("family_lat", (float)0);
+        } catch(Exception e) {
+            System.out.println("Parse error");
+        }
 
-        String home_label = preferences.getString("home_label", "");
+        String house_label = preferences.getString("home_label", "");
         String friend_label = preferences.getString("friend_label", "");
         String family_label = preferences.getString("family_label", "");
+
+        TextView house_label_view = findViewById(R.id.house_label_view);
+        TextView friend_label_view = findViewById(R.id.friend_label_view);
+        TextView family_label_view = findViewById(R.id.family_label_view);
+
+        house_label_view.setText(house_label);
+        friend_label_view.setText(friend_label);
+        family_label_view.setText(family_label);
+
+        ImageView house_icon = findViewById(R.id.house);
+        ImageView friend_icon = findViewById(R.id.friend);
+        ImageView family_icon = findViewById(R.id.family);
+
+        if(!houseDisplay) {
+            house_icon.setVisibility(INVISIBLE);
+            house_label_view.setVisibility(INVISIBLE);
+        }
+
+        if(!friendDisplay) {
+            friend_icon.setVisibility(INVISIBLE);
+            friend_label_view.setVisibility(INVISIBLE);
+        }
+
+        if(!familyDisplay) {
+            family_icon.setVisibility(INVISIBLE);
+            family_label_view.setVisibility(INVISIBLE);
+        }
     }
 
     void updateLocation() {
@@ -87,6 +129,7 @@ public class CompassActivity extends AppCompatActivity {
         renderImage(family, familyLat, familyLon);
         ImageView house = findViewById(R.id.house);
         renderImage(house, houseLat, houseLon);
+        stackIcons();
     }
 
     void renderImage(ImageView image, double otherLat, double otherLon) {
@@ -94,6 +137,26 @@ public class CompassActivity extends AppCompatActivity {
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) image.getLayoutParams();
         layoutParams.circleAngle = (float)(degrees+orient*(180 / Math.PI));
         image.setLayoutParams(layoutParams);
+    }
+
+    void stackIcons() {
+        ImageView house = findViewById(R.id.house);
+        ConstraintLayout.LayoutParams houseLayoutParams = (ConstraintLayout.LayoutParams) house.getLayoutParams();
+        ImageView friend = findViewById(R.id.friend);
+        ConstraintLayout.LayoutParams friendLayoutParams = (ConstraintLayout.LayoutParams) friend.getLayoutParams();
+        ImageView family = findViewById(R.id.family);
+        ConstraintLayout.LayoutParams familyLayoutParams = (ConstraintLayout.LayoutParams) family.getLayoutParams();
+        if(Math.abs(houseLayoutParams.circleAngle - friendLayoutParams.circleAngle) < 20) {
+            friendLayoutParams.circleRadius = houseLayoutParams.circleRadius - 100;
+        } else friendLayoutParams.circleRadius = houseLayoutParams.circleRadius;
+        if(Math.abs(friendLayoutParams.circleAngle - familyLayoutParams.circleAngle) < 20) {
+            familyLayoutParams.circleRadius = friendLayoutParams.circleRadius - 100;
+        } else if(Math.abs(houseLayoutParams.circleAngle - familyLayoutParams.circleAngle) < 20) {
+            familyLayoutParams.circleRadius = houseLayoutParams.circleRadius - 100;
+        } else familyLayoutParams.circleRadius = friendLayoutParams.circleRadius;
+        house.setLayoutParams(houseLayoutParams);
+        friend.setLayoutParams(friendLayoutParams);
+        family.setLayoutParams(familyLayoutParams);
     }
 
     public static double angleFromCoordinate(double lat1, double long1, double lat2,
