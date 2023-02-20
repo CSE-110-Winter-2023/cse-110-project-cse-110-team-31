@@ -40,8 +40,7 @@ public class CompassActivity extends AppCompatActivity {
 
         getLocations();
         updateLocation();
-        updateOrientation();
-        System.out.println(friendLat);
+        if(!mockOrientationWithBox()) updateOrientation();
     }
 
     void updateOrientation() {
@@ -57,6 +56,15 @@ public class CompassActivity extends AppCompatActivity {
 
         getLocations();
         setImageDirections();
+    }
+
+    boolean mockOrientationWithBox() {
+        SharedPreferences preferences = getSharedPreferences("Locations", MODE_PRIVATE);
+        if(preferences.contains("orientation")) {
+            orient = (Math.PI/180)*preferences.getFloat("orientation", 0f);
+            return true;
+        }
+        return false;
     }
 
     public void getLocations(){

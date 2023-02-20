@@ -85,6 +85,9 @@ public class AddLocationsActivity extends AppCompatActivity {
         editor.putString("family_label", family_label_view.getText().toString());
         editor.putString("friend_label", friend_label_view.getText().toString());
 
+        TextView orientation_test = findViewById(R.id.orientation_test);
+        if(!orientation_test.getText().toString().equals("")) editor.putFloat("orientation", Float.parseFloat(orientation_test.getText().toString()));
+
         editor.apply();
     }
 
@@ -105,7 +108,6 @@ public class AddLocationsActivity extends AppCompatActivity {
         if (atLeastOneLocationExists()) {
             Intent intent = new Intent(this, CompassActivity.class);// New activity
             startActivity(intent);
-            finish();
         } else {
             AlertDialog alertDialog = new AlertDialog.Builder(AddLocationsActivity.this).create();
             alertDialog.setTitle("Alert");
