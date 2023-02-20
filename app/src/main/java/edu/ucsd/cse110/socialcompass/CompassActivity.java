@@ -129,6 +129,7 @@ public class CompassActivity extends AppCompatActivity {
         renderImage(family, familyLat, familyLon);
         ImageView house = findViewById(R.id.house);
         renderImage(house, houseLat, houseLon);
+        stackIcons();
     }
 
     void renderImage(ImageView image, double otherLat, double otherLon) {
@@ -136,6 +137,26 @@ public class CompassActivity extends AppCompatActivity {
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) image.getLayoutParams();
         layoutParams.circleAngle = (float)(degrees+orient*(180 / Math.PI));
         image.setLayoutParams(layoutParams);
+    }
+
+    void stackIcons() {
+        ImageView house = findViewById(R.id.house);
+        ConstraintLayout.LayoutParams houseLayoutParams = (ConstraintLayout.LayoutParams) house.getLayoutParams();
+        ImageView friend = findViewById(R.id.friend);
+        ConstraintLayout.LayoutParams friendLayoutParams = (ConstraintLayout.LayoutParams) friend.getLayoutParams();
+        ImageView family = findViewById(R.id.family);
+        ConstraintLayout.LayoutParams familyLayoutParams = (ConstraintLayout.LayoutParams) family.getLayoutParams();
+        if(Math.abs(houseLayoutParams.circleAngle - friendLayoutParams.circleAngle) < 20) {
+            friendLayoutParams.circleRadius = houseLayoutParams.circleRadius - 100;
+        } else friendLayoutParams.circleRadius = houseLayoutParams.circleRadius;
+        if(Math.abs(friendLayoutParams.circleAngle - familyLayoutParams.circleAngle) < 20) {
+            familyLayoutParams.circleRadius = friendLayoutParams.circleRadius - 100;
+        } else if(Math.abs(houseLayoutParams.circleAngle - familyLayoutParams.circleAngle) < 20) {
+            familyLayoutParams.circleRadius = houseLayoutParams.circleRadius - 100;
+        } else familyLayoutParams.circleRadius = friendLayoutParams.circleRadius;
+        house.setLayoutParams(houseLayoutParams);
+        friend.setLayoutParams(friendLayoutParams);
+        family.setLayoutParams(familyLayoutParams);
     }
 
     public static double angleFromCoordinate(double lat1, double long1, double lat2,
