@@ -34,7 +34,7 @@ public class AddLocationsIntegrationTests {
 
         scenario2.onActivity(activity2 -> {
             TextView my_long_view = (TextView) activity2.findViewById(R.id.family_long_view);
-            assertEquals("1", my_long_view.getText().toString());
+            assertEquals("1.0", my_long_view.getText().toString());
         });
 
 
@@ -65,9 +65,9 @@ public class AddLocationsIntegrationTests {
                 TextView my_long_view_2 = (TextView) activity2.findViewById(R.id.family_long_view);
                 TextView my_long2_view_2 = (TextView) activity2.findViewById(R.id.friend_long_view);
                 TextView my_lat3_view_2 = (TextView) activity2.findViewById(R.id.family_lat_view);
-                assertEquals("1", my_long_view_2.getText().toString());
-                assertEquals("2", my_long2_view_2.getText().toString());
-                assertEquals("3", my_lat3_view_2.getText().toString());
+                assertEquals("1.0", my_long_view_2.getText().toString());
+                assertEquals("2.0", my_long2_view_2.getText().toString());
+                assertEquals("3.0", my_lat3_view_2.getText().toString());
             });
 
         });
