@@ -2,6 +2,7 @@ package edu.ucsd.cse110.socialcompass;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -101,6 +102,9 @@ public class AddLocationsActivity extends AppCompatActivity {
     public void onSubmitClicked(View view) {
         saveLocations();
         if (atLeastOneLocationExists()) {
+            Intent intent = new Intent(this, CompassActivity.class);// New activity
+            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
             finish();
         }
     }
