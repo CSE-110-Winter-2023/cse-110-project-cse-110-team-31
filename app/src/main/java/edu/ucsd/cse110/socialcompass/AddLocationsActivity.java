@@ -3,7 +3,7 @@ package edu.ucsd.cse110.socialcompass;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -103,6 +103,8 @@ public class AddLocationsActivity extends AppCompatActivity {
     public void onSubmitClicked(View view) {
         saveLocations();
         if (atLeastOneLocationExists()) {
+            Intent intent = new Intent(this, CompassActivity.class);// New activity
+            startActivity(intent);
             finish();
         } else {
             AlertDialog alertDialog = new AlertDialog.Builder(AddLocationsActivity.this).create();
