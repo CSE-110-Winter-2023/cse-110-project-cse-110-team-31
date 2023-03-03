@@ -18,11 +18,11 @@ public class LocationAPIUnitTest {
 
         Location loc = api.getLocation("ranatest");
 
-        System.out.println(loc.toJSON());
+        assert loc.label.equals("Rana");
     }
 
     @Test
-    public void putLocationTest() throws ExecutionException, InterruptedException, TimeoutException {
+    public void putLocationRunsTest() {
         Location loc = new Location("ranatest2", 30, 40);
         loc.private_code = "notouch";
         loc.label = "Rana";
@@ -35,15 +35,36 @@ public class LocationAPIUnitTest {
     }
 
     @Test
-    public void patchLocationTest() throws ExecutionException, InterruptedException, TimeoutException {
+    public void patchLocationRunsTest() {
         Location loc = new Location("ranatest2");
         loc.private_code = "notouch";
-        loc.isPublic = true;
+        loc.isPublic = false;
 
         System.out.println(loc.toLimitedJSON(new String[]{"private_code", "isPublic"}));
 
         LocationAPI api = LocationAPI.provide();
 
         api.patchLocation(loc);
+    }
+
+    @Test
+    public void getPutLocationTest() throws ExecutionException, InterruptedException, TimeoutException {
+        LocationAPI api = LocationAPI.provide();
+
+        Location loc = new Location("ranatest3", 35, 45);
+        loc.private_code = "notouch";
+        loc.label = "Rana";
+
+        api.putLocation(loc);
+
+        Thread.currentThread().join(200);
+
+        Location receivedLoc = api.getLocation("ranatest3");
+
+        assert receivedLoc.longitude == loc.longitude
+                && receivedLoc.latitude == loc.latitude
+                && receivedLoc.label.equals(loc.label);
+
+        api.deleteLoc(loc);
     }
 }
