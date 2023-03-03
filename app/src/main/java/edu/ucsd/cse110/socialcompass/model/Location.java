@@ -56,11 +56,10 @@ public class Location {
         return new Gson().toJson(this);
     }
 
-    public String toPutJSON() {
+    public String toLimitedJSON(String[] fieldsToInclude) {
         ExclusionStrategy strategy = new ExclusionStrategy() {
             @Override
             public boolean shouldSkipField(FieldAttributes f) {
-                String[] fieldsToInclude = {"private_code", "label", "latitude", "longitude"};
                 for (String s : fieldsToInclude) {
                     if (f.getName().equals(s)) return false;
                 }

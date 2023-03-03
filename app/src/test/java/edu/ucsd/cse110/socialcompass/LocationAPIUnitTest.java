@@ -27,10 +27,23 @@ public class LocationAPIUnitTest {
         loc.private_code = "notouch";
         loc.label = "Rana";
 
-        System.out.println(loc.toPutJSON());
+        System.out.println(loc.toLimitedJSON(new String[]{"private_code", "label", "latitude", "longitude"}));
 
         LocationAPI api = LocationAPI.provide();
 
         api.putLocation(loc);
+    }
+
+    @Test
+    public void patchLocationTest() throws ExecutionException, InterruptedException, TimeoutException {
+        Location loc = new Location("ranatest2");
+        loc.private_code = "notouch";
+        loc.isPublic = true;
+
+        System.out.println(loc.toLimitedJSON(new String[]{"private_code", "isPublic"}));
+
+        LocationAPI api = LocationAPI.provide();
+
+        api.patchLocation(loc);
     }
 }

@@ -54,19 +54,37 @@ public class LocationAPI {
     public void putLocation(Location loc) {
         final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-        String noteJson = loc.toPutJSON();
-        System.out.println(noteJson+" "+loc.UID);
-        Log.i("PUTLOC JSON", noteJson + " " +loc.UID);
+        String locJson = loc.toLimitedJSON(new String[]{"private_code", "label", "latitude", "longitude"});
+        Log.i("PUTLOC JSON", locJson + " " +loc.UID);
         Thread putThread = new Thread(() -> {
-            var body = RequestBody.create(noteJson, JSON);
+            var body = RequestBody.create(locJson, JSON);
             Request request = new Request.Builder()
                     .url("https://socialcompass.goto.ucsd.edu/location/" + loc.UID)
                     .put(body)
                     .build();
             try (var response = client.newCall(request).execute()) {
                 assert response.body() != null;
-                System.out.println(response.body().string());
-                Log.i("POSTLOC", response.body().string());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        putThread.start();
+    }
+
+    public void patchLocation(Location loc) {
+        final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+        String locJson = loc.toLimitedJSON(new String[]{"private_code", "is_listed_publicly"});
+        System.out.println(loc.isPublic);
+        Log.i("PATCHLOC JSON", locJson + " " +loc.UID);
+        Thread putThread = new Thread(() -> {
+            var body = RequestBody.create(locJson, JSON);
+            Request request = new Request.Builder()
+                    .url("https://socialcompass.goto.ucsd.edu/location/" + loc.UID)
+                    .patch(body)
+                    .build();
+            try (var response = client.newCall(request).execute()) {
+                assert response.body() != null;
             } catch (Exception e) {
                 e.printStackTrace();
             }
