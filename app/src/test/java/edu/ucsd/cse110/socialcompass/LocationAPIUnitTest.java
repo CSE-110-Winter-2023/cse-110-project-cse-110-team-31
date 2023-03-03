@@ -20,8 +20,4 @@ public class LocationAPIUnitTest {
 
         System.out.println(loc.latitude);
     }
-
-    @Test void putLocationTest() {
-
-    }
 }
