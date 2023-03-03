@@ -16,8 +16,21 @@ public class LocationAPIUnitTest {
     public void getLocationTest() throws ExecutionException, InterruptedException, TimeoutException {
         LocationAPI api = LocationAPI.provide();
 
-        Location loc = api.getLocation("point-nemo");
+        Location loc = api.getLocation("ranatest");
 
-        System.out.println(loc.latitude);
+        System.out.println(loc.toJSON());
+    }
+
+    @Test
+    public void putLocationTest() throws ExecutionException, InterruptedException, TimeoutException {
+        Location loc = new Location("ranatest2", 30, 40);
+        loc.private_code = "notouch";
+        loc.label = "Rana";
+
+        System.out.println(loc.toPutJSON());
+
+        LocationAPI api = LocationAPI.provide();
+
+        api.putLocation(loc);
     }
 }

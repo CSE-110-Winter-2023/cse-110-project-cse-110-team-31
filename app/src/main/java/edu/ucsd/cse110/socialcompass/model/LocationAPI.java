@@ -51,19 +51,21 @@ public class LocationAPI {
         return future_get.get(1, TimeUnit.SECONDS);
     }
 
-    public void postNote(Location loc) {
+    public void putLocation(Location loc) {
         final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-        String noteJson = loc.toJSON();
-        Log.i("POSTLOC JSON", noteJson + " " +loc.UID);
+        String noteJson = loc.toPutJSON();
+        System.out.println(noteJson+" "+loc.UID);
+        Log.i("PUTLOC JSON", noteJson + " " +loc.UID);
         Thread putThread = new Thread(() -> {
             var body = RequestBody.create(noteJson, JSON);
             Request request = new Request.Builder()
-                    .url("https://sharednotes.goto.ucsd.edu/notes/" + loc.UID)
+                    .url("https://socialcompass.goto.ucsd.edu/location/" + loc.UID)
                     .put(body)
                     .build();
             try (var response = client.newCall(request).execute()) {
                 assert response.body() != null;
+                System.out.println(response.body().string());
                 Log.i("POSTLOC", response.body().string());
             } catch (Exception e) {
                 e.printStackTrace();

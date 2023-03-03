@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "locations")
@@ -13,6 +16,12 @@ public class Location {
     @SerializedName("public_code")
     @NonNull
     public String UID;
+
+    @SerializedName("private_code")
+    public String private_code;
+
+    @SerializedName("is_listed_publicly")
+    public boolean isPublic;
 
     @SerializedName("label")
     public String label;
@@ -35,11 +44,36 @@ public class Location {
         this.longitude = longitude;
     }
 
+    public Location(@NonNull String UID) {
+        this.UID = UID;
+    }
+
     public static Location fromJSON(String json) {
         return new Gson().fromJson(json, Location.class);
     }
 
     public String toJSON() {
         return new Gson().toJson(this);
+    }
+
+    public String toPutJSON() {
+        ExclusionStrategy strategy = new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                String[] fieldsToInclude = {"private_code", "label", "latitude", "longitude"};
+                for (String s : fieldsToInclude) {
+                    if (f.getName().equals(s)) return false;
+                }
+                return true;
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        };
+        Gson gson = new GsonBuilder().addSerializationExclusionStrategy(strategy).create();
+
+        return gson.toJson(this);
     }
 }
