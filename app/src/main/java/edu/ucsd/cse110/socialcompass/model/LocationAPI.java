@@ -74,8 +74,8 @@ public class LocationAPI {
     public void patchLocation(Location loc) {
         final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
-        String locJson = loc.toLimitedJSON(new String[]{"private_code", "is_listed_publicly"});
-        System.out.println(loc.isPublic);
+        String locJson = loc.toLimitedJSON(new String[]{"private_code", "isPublic"});
+        System.out.println(locJson);
         Log.i("PATCHLOC JSON", locJson + " " +loc.UID);
         Thread putThread = new Thread(() -> {
             var body = RequestBody.create(locJson, JSON);
