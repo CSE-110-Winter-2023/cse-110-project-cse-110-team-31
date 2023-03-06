@@ -5,7 +5,9 @@ import static android.view.View.INVISIBLE;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.content.SharedPreferences;
@@ -19,6 +21,7 @@ import java.util.concurrent.TimeoutException;
 
 import edu.ucsd.cse110.socialcompass.model.Location;
 import edu.ucsd.cse110.socialcompass.model.LocationAPI;
+import edu.ucsd.cse110.socialcompass.model.LocationViewModel;
 
 public class CompassActivity extends AppCompatActivity {
     public LocationService locationService;
@@ -61,6 +64,8 @@ public class CompassActivity extends AppCompatActivity {
         getLocations();
         updateLocation();
         if(!mockOrientationWithBox()) updateOrientation();
+
+        setFriendLocation();
     }
 
     void updateOrientation() {
@@ -151,6 +156,18 @@ public class CompassActivity extends AppCompatActivity {
             api.putLocation(loc);
             setImageDirections();
         });
+    }
+
+    LiveData<Location> friendLoc;
+    void setFriendLocation() {
+        var viewModel = new ViewModelProvider(this).get(LocationViewModel.class);
+        friendLoc = viewModel.getNote("ranatest5");
+        friendLoc.observe(this, this::onLocChanged);
+    }
+
+    public void onLocChanged(Location changeLoc) {
+        friendLat = changeLoc.latitude;
+        friendLon = changeLoc.longitude;
     }
 
     void setImageDirections() {
