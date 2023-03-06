@@ -36,7 +36,7 @@ public class LocationRepository {
                 throw new RuntimeException(e);
             }
             loc.postValue(l);
-            Log.i("NOTE RECEIVED", l.label+" "+l.longitude);
+            Log.i("LOCATION RECEIVED", l.label+" "+l.longitude);
         }, 0, 3000, TimeUnit.MILLISECONDS);
         return loc;
     }

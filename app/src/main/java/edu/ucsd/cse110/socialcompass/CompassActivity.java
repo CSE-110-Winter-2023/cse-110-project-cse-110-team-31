@@ -183,7 +183,7 @@ public class CompassActivity extends AppCompatActivity {
     void renderImage(ImageView image, double otherLat, double otherLon) {
         double degrees = angleFromCoordinate(lat, lon, otherLat, otherLon);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) image.getLayoutParams();
-        layoutParams.circleAngle = (float)(degrees+orient*(180 / Math.PI));
+        layoutParams.circleAngle = (float)(degrees-orient*(180 / Math.PI));
         image.setLayoutParams(layoutParams);
     }
 
