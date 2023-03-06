@@ -5,6 +5,7 @@ import static android.view.View.INVISIBLE;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.MutableLiveData;
 
 import android.Manifest;
 import android.content.SharedPreferences;
@@ -12,6 +13,9 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import edu.ucsd.cse110.socialcompass.model.Location;
 import edu.ucsd.cse110.socialcompass.model.LocationAPI;
@@ -21,6 +25,7 @@ public class CompassActivity extends AppCompatActivity {
     public OrientationService orientationService;
 
     Location loc;
+    LocationAPI api;
 
     // TODO: these two need to be updated by sharedpreferences or something
     String UID = "ranatest4";
@@ -49,6 +54,7 @@ public class CompassActivity extends AppCompatActivity {
         orientationService = OrientationService.singleton(this);
 
         loc = new Location(UID);
+        api = LocationAPI.provide();
         loc.label = label;
         loc.private_code = priv_key;
 
@@ -142,7 +148,6 @@ public class CompassActivity extends AppCompatActivity {
             lon = location.second;
             loc.latitude = location.first;
             loc.longitude = location.second;
-            LocationAPI api = LocationAPI.provide();
             api.putLocation(loc);
             setImageDirections();
         });
