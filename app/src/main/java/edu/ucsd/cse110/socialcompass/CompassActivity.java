@@ -13,9 +13,19 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import edu.ucsd.cse110.socialcompass.model.Location;
+import edu.ucsd.cse110.socialcompass.model.LocationAPI;
+
 public class CompassActivity extends AppCompatActivity {
     public LocationService locationService;
     public OrientationService orientationService;
+
+    Location loc;
+
+    // TODO: these two need to be updated by sharedpreferences or something
+    String UID = "ranatest4";
+    String label = "hi I am Rana";
+    String priv_key = "notouch";
 
     double lat, lon;
     double orient = 0;
@@ -37,6 +47,10 @@ public class CompassActivity extends AppCompatActivity {
 
         locationService = LocationService.singleton(this);
         orientationService = OrientationService.singleton(this);
+
+        loc = new Location(UID);
+        loc.label = label;
+        loc.private_code = priv_key;
 
         getLocations();
         updateLocation();
@@ -123,9 +137,13 @@ public class CompassActivity extends AppCompatActivity {
     }
 
     void updateLocation() {
-        locationService.getLocation().observe(this, loc -> {
-            lat = loc.first;
-            lon = loc.second;
+        locationService.getLocation().observe(this, location -> {
+            lat = location.first;
+            lon = location.second;
+            loc.latitude = location.first;
+            loc.longitude = location.second;
+            LocationAPI api = LocationAPI.provide();
+            api.putLocation(loc);
             setImageDirections();
         });
     }
