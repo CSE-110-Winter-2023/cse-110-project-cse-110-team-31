@@ -11,7 +11,7 @@ import edu.ucsd.cse110.socialcompass.model.Location;
 import edu.ucsd.cse110.socialcompass.model.LocationAPI;
 
 @RunWith(RobolectricTestRunner.class)
-public class LocationAPIUnitTest {
+public class Story9IntegrationTest {
     @Test
     public void getLocationTest() throws ExecutionException, InterruptedException, TimeoutException {
         LocationAPI api = LocationAPI.provide();
