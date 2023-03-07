@@ -5,6 +5,9 @@ import static android.view.View.INVISIBLE;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.content.SharedPreferences;
@@ -13,9 +16,24 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
+import edu.ucsd.cse110.socialcompass.model.Location;
+import edu.ucsd.cse110.socialcompass.model.LocationAPI;
+import edu.ucsd.cse110.socialcompass.model.LocationViewModel;
+
 public class CompassActivity extends AppCompatActivity {
     public LocationService locationService;
     public OrientationService orientationService;
+
+    Location loc;
+    LocationAPI api;
+
+    // TODO: these two need to be updated by sharedpreferences or something
+    String UID = "ranatest4";
+    String label = "hi I am Rana";
+    String priv_key = "notouch";
 
     double lat, lon;
     double orient = 0;
@@ -38,9 +56,16 @@ public class CompassActivity extends AppCompatActivity {
         locationService = LocationService.singleton(this);
         orientationService = OrientationService.singleton(this);
 
+        loc = new Location(UID);
+        api = LocationAPI.provide();
+        loc.label = label;
+        loc.private_code = priv_key;
+
         getLocations();
         updateLocation();
         if(!mockOrientationWithBox()) updateOrientation();
+
+        setFriendLocation();
     }
 
     void updateOrientation() {
@@ -123,11 +148,26 @@ public class CompassActivity extends AppCompatActivity {
     }
 
     void updateLocation() {
-        locationService.getLocation().observe(this, loc -> {
-            lat = loc.first;
-            lon = loc.second;
+        locationService.getLocation().observe(this, location -> {
+            lat = location.first;
+            lon = location.second;
+            loc.latitude = location.first;
+            loc.longitude = location.second;
+            api.putLocation(loc);
             setImageDirections();
         });
+    }
+
+    LiveData<Location> friendLoc;
+    void setFriendLocation() {
+        var viewModel = new ViewModelProvider(this).get(LocationViewModel.class);
+        friendLoc = viewModel.getNote("ranatest5");
+        friendLoc.observe(this, this::onLocChanged);
+    }
+
+    public void onLocChanged(Location changeLoc) {
+        friendLat = changeLoc.latitude;
+        friendLon = changeLoc.longitude;
     }
 
     void setImageDirections() {
@@ -143,7 +183,7 @@ public class CompassActivity extends AppCompatActivity {
     void renderImage(ImageView image, double otherLat, double otherLon) {
         double degrees = angleFromCoordinate(lat, lon, otherLat, otherLon);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) image.getLayoutParams();
-        layoutParams.circleAngle = (float)(degrees+orient*(180 / Math.PI));
+        layoutParams.circleAngle = (float)(degrees-orient*(180 / Math.PI));
         image.setLayoutParams(layoutParams);
     }
 

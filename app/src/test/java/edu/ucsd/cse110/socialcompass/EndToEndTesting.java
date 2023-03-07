@@ -73,7 +73,7 @@ public class EndToEndTesting {
 
             mockOrientation.setValue((float)Math.PI/2); // rotate 90 degrees
 
-            assert houseLayoutParams.circleAngle == 90 && friendLayoutParams.circleAngle == 180;
+            assert Math.round(houseLayoutParams.circleAngle) == -90 && Math.round(friendLayoutParams.circleAngle) == 0;
         });
     }
 }
