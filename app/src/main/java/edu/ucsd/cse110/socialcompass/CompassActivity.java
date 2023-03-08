@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
@@ -59,12 +60,11 @@ public class CompassActivity extends AppCompatActivity {
         compassAdapter.setHasStableIds(true);
 
         recyclerView = findViewById(R.id.friends);
-        recyclerView.setLayoutManager(new AutoFitGridLayoutManager(this, spanCount));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, spanCount));
         recyclerView.setAdapter(compassAdapter);
 
 
-//        List<Friend> friends = Friend.loadJSON(this,"demo_friends.json");
-//        Log.d("CompassActivity", friends.toString());
+
         compassAdapter.setFriendsList(Friend.loadJSON(this,"demo_friends.json"));
 
 

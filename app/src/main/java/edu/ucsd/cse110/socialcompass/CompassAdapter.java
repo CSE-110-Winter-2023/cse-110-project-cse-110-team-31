@@ -56,16 +56,12 @@ public class CompassAdapter extends RecyclerView.Adapter<CompassAdapter.ViewHold
 
         }
 
-
         public Friend getFriend() { return friend; }
 
         public void setFriend(Friend friend) {
             this.friend = friend;
             this.name.setText(friend.name);
             var friendParams = this.name.getLayoutParams();
-
-            //set friend grid row col
-
         }
 
 

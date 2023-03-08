@@ -120,12 +120,13 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/friends"
-            android:layout_width="415dp"
-            android:layout_height="417dp"
+            android:layout_width="408dp"
+            android:layout_height="156dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/circle"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
