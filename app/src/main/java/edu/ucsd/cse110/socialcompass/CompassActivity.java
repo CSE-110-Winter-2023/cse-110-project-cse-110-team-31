@@ -8,14 +8,18 @@ import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -24,6 +28,9 @@ import edu.ucsd.cse110.socialcompass.model.LocationAPI;
 import edu.ucsd.cse110.socialcompass.model.LocationViewModel;
 
 public class CompassActivity extends AppCompatActivity {
+
+    int spanCount = 1000;
+    public RecyclerView recyclerView;
     public LocationService locationService;
     public OrientationService orientationService;
 
@@ -47,6 +54,21 @@ public class CompassActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compass);
+
+        CompassAdapter compassAdapter = new CompassAdapter();
+        compassAdapter.setHasStableIds(true);
+
+        recyclerView = findViewById(R.id.friends);
+        recyclerView.setLayoutManager(new AutoFitGridLayoutManager(this, spanCount));
+        recyclerView.setAdapter(compassAdapter);
+
+
+//        List<Friend> friends = Friend.loadJSON(this,"demo_friends.json");
+//        Log.d("CompassActivity", friends.toString());
+        compassAdapter.setFriendsList(Friend.loadJSON(this,"demo_friends.json"));
+
+
+
 
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
