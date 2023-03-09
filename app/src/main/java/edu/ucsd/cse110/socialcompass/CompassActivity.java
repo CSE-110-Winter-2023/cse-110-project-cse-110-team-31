@@ -71,6 +71,7 @@ public class CompassActivity extends AppCompatActivity {
         if(!mockOrientationWithBox()) updateOrientation();
 
         setFriendLocation();
+
     }
 
     void updateOrientation() {
@@ -193,16 +194,16 @@ public class CompassActivity extends AppCompatActivity {
         image.setLayoutParams(layoutParams);
     }
 
-    public double latDistInMiles(double latDist){
-        return Math.abs(latDist - lat) * 69;
+    public static double latDistInMiles(double latDist, double curLat){
+        return Math.abs(latDist - curLat) * 69;
     }
 
-    public double lonDistInMiles(double lonDist){
-        return Math.abs(lonDist - lon) * 54.6;
+    public static double lonDistInMiles(double lonDist, double curLon){
+        return Math.abs(lonDist - curLon) * 54.6;
     }
 
-    public double distInMiles(double latDist, double lonDist){
-        return Math.sqrt(Math.pow(lonDistInMiles(lonDist), 2) + Math.pow(latDistInMiles(latDist), 2));
+    public static double distInMiles(double latDist, double lonDist, double curLat, double curLon){
+        return Math.sqrt(Math.pow(lonDistInMiles(lonDist, curLon), 2) + Math.pow(latDistInMiles(latDist, curLat), 2));
     }
 
     void renderDistances() {
@@ -215,9 +216,9 @@ public class CompassActivity extends AppCompatActivity {
         ImageView family = findViewById(R.id.family);
         ConstraintLayout.LayoutParams familyLayoutParams = (ConstraintLayout.LayoutParams) family.getLayoutParams();
 
-        double houseDist = distInMiles(houseLat, houseLon);
-        double friendDist = distInMiles(friendLat, friendLon);
-        double familyDist = distInMiles(familyLat, familyLon);
+        double houseDist = distInMiles(houseLat, houseLon, lat, lon);
+        double friendDist = distInMiles(friendLat, friendLon, lat, lon);
+        double familyDist = distInMiles(familyLat, familyLon, lat, lon);
         Log.i("OUR_LONG_LAT", String.valueOf(lat) + " " + String.valueOf(lon));
 
         if (houseDist > zoom_stub){
@@ -225,21 +226,23 @@ public class CompassActivity extends AppCompatActivity {
         } else {
             houseLayoutParams.circleRadius = (int) (houseDist * constraintToZoomRatio);
         }
-        Log.i("HOUSE_LONG_LAT", String.valueOf(houseLat) + " " + String.valueOf(houseLon));
+        //Log.i("HOUSE_LONG_LAT", String.valueOf(houseLat) + " " + String.valueOf(houseLon));
+        //Log.i("HOUSE_DIST", String.valueOf(houseDist));
 
         if (friendDist > zoom_stub){
             friendLayoutParams.circleRadius = 500;
         } else {
-            friendLayoutParams.circleRadius = (int) (houseDist * constraintToZoomRatio);
+            friendLayoutParams.circleRadius = (int) (friendDist * constraintToZoomRatio);
         }
-        Log.i("FRIEND_LONG_LAT", String.valueOf(friendLat) + " " + String.valueOf(friendLon));
+        //Log.i("FRIEND_LONG_LAT", String.valueOf(friendLat) + " " + String.valueOf(friendLon));
 
         if (familyDist > zoom_stub){
             familyLayoutParams.circleRadius = 500;
         } else {
-            familyLayoutParams.circleRadius = (int) (houseDist * constraintToZoomRatio);
+            familyLayoutParams.circleRadius = (int) (familyDist * constraintToZoomRatio);
         }
-        Log.i("FAMILY_LONG_LAT", String.valueOf(familyLat) + " " + String.valueOf(familyLon));
+        //Log.i("FAMILY_LONG_LAT", String.valueOf(familyLat) + " " + String.valueOf(familyLon));
+        //Log.i("FAMILY_DIST", String.valueOf(familyDist));
 
         house.setLayoutParams(houseLayoutParams);
         friend.setLayoutParams(friendLayoutParams);
