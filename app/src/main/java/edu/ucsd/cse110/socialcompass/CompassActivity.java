@@ -105,19 +105,38 @@ public class CompassActivity extends AppCompatActivity {
             copy.circleConstraint = compass.getId();
 
             copy.circleAngle = i*50;
-            copy.circleRadius = 100*i;
+            copy.circleRadius = 200+100*i;
             temp.setLayoutParams(copy);
 
             friends.add(temp);
         }
     }
 
+    public void updateAllLocs() {
+        for(int i=0; i<locs.size(); i++) {
+            updateLoc(i);
+        }
+    }
+    public void updateLoc(int i) {
+        TextView currView = friends.get(i);
+        Location currLoc = locs.get(i);
+        currView.setText(currLoc.label);
+        renderText(currView, currLoc.latitude, currLoc.longitude);
+    }
+
+    void renderText(TextView text, double otherLat, double otherLon) {
+        double degrees = angleFromCoordinate(lat, lon, otherLat, otherLon);
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) text.getLayoutParams();
+        layoutParams.circleAngle = (float)(degrees-orient*(180 / Math.PI));
+        text.setLayoutParams(layoutParams);
+    }
 
     public void onLocChanged(Location changeLoc) {
         for(int i=0; i<locs.size(); i++) {
             if(locs.get(i).UID.equals(changeLoc.UID)) {
                 locs.set(i, changeLoc);
                 Log.i("GOT LOC", changeLoc.UID);
+                updateLoc(i);
             }
         }
     }
@@ -126,6 +145,7 @@ public class CompassActivity extends AppCompatActivity {
         orientationService.getOrientation().observe(this, orientation -> {
             orient = orientation;
             setImageDirections();
+            updateAllLocs();
         });
     }
 
