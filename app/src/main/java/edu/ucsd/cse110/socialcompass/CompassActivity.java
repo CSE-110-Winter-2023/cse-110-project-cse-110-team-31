@@ -44,6 +44,7 @@ public class CompassActivity extends AppCompatActivity {
     double lat, lon;
     double orient = 0;
 
+    // TODO: read from sharedpreferences (from the AddFriendActivity)
     String[] uids = {"ranatest2", "ranatest5"};
 
     ArrayList<LiveData<Location>> liveLocs;
@@ -105,11 +106,13 @@ public class CompassActivity extends AppCompatActivity {
             copy.circleConstraint = compass.getId();
 
             copy.circleAngle = i*50;
-            copy.circleRadius = 200+100*i;
+            copy.circleRadius = 500;
             temp.setLayoutParams(copy);
 
             friends.add(temp);
         }
+
+        friend.setVisibility(INVISIBLE);
     }
 
     public void updateAllLocs() {
@@ -128,6 +131,8 @@ public class CompassActivity extends AppCompatActivity {
         double degrees = angleFromCoordinate(lat, lon, otherLat, otherLon);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) text.getLayoutParams();
         layoutParams.circleAngle = (float)(degrees-orient*(180 / Math.PI));
+        // TODO: add this line
+        // layoutParams.circleRadius = ???;
         text.setLayoutParams(layoutParams);
     }
 
@@ -169,9 +174,10 @@ public class CompassActivity extends AppCompatActivity {
     public void getLocations(){
         SharedPreferences preferences = getSharedPreferences("Locations", MODE_PRIVATE);
 
-        houseDisplay=true;
-        friendDisplay=true;
-        familyDisplay=true;
+        // for now, just have them be set to invisible
+        houseDisplay=false;
+        friendDisplay=false;
+        familyDisplay=false;
 
         try {
             if((!preferences.contains("my_long")||(!preferences.contains("my_lat")))) houseDisplay = false;
@@ -228,17 +234,10 @@ public class CompassActivity extends AppCompatActivity {
             loc.latitude = location.first;
             loc.longitude = location.second;
             api.putLocation(loc);
+            updateAllLocs();
             setImageDirections();
         });
     }
-
-    LiveData<Location> friendLoc;
-    void setFriendLocation() {
-        var viewModel = new ViewModelProvider(this).get(LocationViewModel.class);
-        friendLoc = viewModel.getNote("ranatest5");
-        friendLoc.observe(this, this::onLocChanged);
-    }
-
 
     void setImageDirections() {
         ImageView friend = findViewById(R.id.friend);
