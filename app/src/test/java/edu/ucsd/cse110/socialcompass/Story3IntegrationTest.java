@@ -52,12 +52,14 @@ public class Story3IntegrationTest {
         scenario.moveToState(Lifecycle.State.STARTED);
 
         scenario.onActivity(activity -> {
-            TextView friend_label = activity.findViewById(R.id.friend_label_view);
-            assert friend_label.getVisibility() == View.VISIBLE && friend_label.getText().toString().equals("friend_test");
-            TextView house_label = activity.findViewById(R.id.house_label_view);
-            assert house_label.getVisibility() == View.VISIBLE && house_label.getText().toString().equals("house_test");
-            TextView family_label = activity.findViewById(R.id.family_label_view);
-            assert family_label.getVisibility() == View.INVISIBLE;
+            // THESE TESTS ARE NO LONGER APPLICABLE AS WE NO LONGER RENDER
+            // THE OLD ICONS
+//            TextView friend_label = activity.findViewById(R.id.friend_label_view);
+//            assert friend_label.getVisibility() == View.VISIBLE && friend_label.getText().toString().equals("friend_test");
+//            TextView house_label = activity.findViewById(R.id.house_label_view);
+//            assert house_label.getVisibility() == View.VISIBLE && house_label.getText().toString().equals("house_test");
+//            TextView family_label = activity.findViewById(R.id.family_label_view);
+//            assert family_label.getVisibility() == View.INVISIBLE;
         });
     }
 }
