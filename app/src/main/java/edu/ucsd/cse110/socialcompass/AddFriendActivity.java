@@ -8,8 +8,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class AddFriendActivity extends AppCompatActivity {
 
+    ArrayList<String> arr = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,16 +22,14 @@ public class AddFriendActivity extends AppCompatActivity {
 
 
     public void onAddFriendSubmitBtnClicked(View view) {
-
-
         boolean addSuccessful = true;
 
         //get entered uid
         EditText addFriendView = findViewById(R.id.enterFriendID);
-        String uid = addFriendView.getText().toString();
+        String uid = addFriendView.getText().toString(); //not neededh
 
         //add friend with associated uid
-        saveUIDs();
+        saveUIDs(); //save uid as a param
 
         //alert that friend is added if successfully added
         if(addSuccessful) Utilities.showAlert(this,"Friend Added Successfully", "Add another friend by entering their uid");
@@ -37,6 +38,15 @@ public class AddFriendActivity extends AppCompatActivity {
         //reset text box
         addFriendView.setHint("Enter another UID");
         addFriendView.setText("");
+    }
+
+    public void onDeleteButtonClicked(View view) {
+        boolean removeSuccessful = true;
+        SharedPreferences preferences = getSharedPreferences("UIDs", MODE_PRIVATE);
+        preferences.edit().clear().apply();
+        if(removeSuccessful) Utilities.showAlert(this,"All Friends Removed Successfully", "You can add friends by entering their UIDs");
+        else Utilities.showAlert(this,"Unable to delete", "Error while trying to delete UIDs");
+
     }
 
     @Override
@@ -59,9 +69,11 @@ public class AddFriendActivity extends AppCompatActivity {
 
         TextView UID_val_view = findViewById(R.id.enterFriendID);
         editor.putString("UID_label", UID_val_view.getText().toString());
+        arr.add(UID_val_view.getText().toString());
 
-        TextView orientation_test = findViewById(R.id.orientation_test);
-        if(!orientation_test.getText().toString().equals("")) editor.putFloat("orientation", Float.parseFloat(orientation_test.getText().toString()));
+        //add an array here
+        //TextView orientation_test = findViewById(R.id.orientation_test);
+        //if(!orientation_test.getText().toString().equals("")) editor.putFloat("orientation", Float.parseFloat(orientation_test.getText().toString()));
 
         editor.apply();
     }
