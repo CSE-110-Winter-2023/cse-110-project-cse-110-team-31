@@ -2,6 +2,7 @@ package edu.ucsd.cse110.socialcompass;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -84,6 +85,8 @@ public class AddFriendActivity extends AppCompatActivity {
         editor.apply();
     }
 
-
-
+    public void onContinueButtonClicked(View view) {
+        Intent intent = new Intent(this, CompassActivity.class);
+        startActivity(intent);
+    }
 }

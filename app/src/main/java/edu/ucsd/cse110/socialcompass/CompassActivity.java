@@ -21,6 +21,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -81,6 +83,8 @@ public class CompassActivity extends AppCompatActivity {
         ConstraintLayout compass = findViewById(R.id.compass);
 
         ImageView friend = findViewById(R.id.friend);
+
+        getUIDs();
 
         liveLocs = new ArrayList<>();
         locs = new ArrayList<>();
@@ -169,6 +173,17 @@ public class CompassActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    public void getUIDs() {
+        SharedPreferences preferences = getSharedPreferences("UIDs", MODE_PRIVATE);
+        Set<String> uidSet = preferences.getStringSet("UIDs", new HashSet<>());
+
+        uids = new String[uidSet.size()];
+        int c=0;
+        for(String s : uidSet) {
+            uids[c++] = s;
+        }
     }
 
     public void getLocations(){
