@@ -51,9 +51,11 @@ public class CompassActivity extends AppCompatActivity {
     ArrayList<LiveData<Location>> liveLocs;
     ArrayList<Location> locs;
     ArrayList<TextView> friends;
-    double zoom_stub = 10;
+    double zoom_max = 10;
 
     int constraint_size = 500;
+
+    double constraintZoomRatio = constraint_size/zoom_max;
 
     boolean houseDisplay, friendDisplay, familyDisplay;
     double friendLat, friendLon;
@@ -104,6 +106,9 @@ public class CompassActivity extends AppCompatActivity {
 
         for(int i=0; i<uids.length; i++) {
             TextView temp = new TextView(this);
+
+
+
             temp.setText(uids[i]);
             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) friend.getLayoutParams();
             ConstraintLayout.LayoutParams copy = new ConstraintLayout.LayoutParams((ViewGroup.LayoutParams)params);
@@ -138,7 +143,12 @@ public class CompassActivity extends AppCompatActivity {
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) text.getLayoutParams();
         layoutParams.circleAngle = (float)(degrees-orient*(180 / Math.PI));
         // TODO: add this line
-        // layoutParams.circleRadius = ???;
+        double locDist = distInMiles(otherLat, otherLon, lat, lon);
+        if (locDist > zoom_max){
+            layoutParams.circleRadius = 500;
+        } else {
+            layoutParams.circleRadius = (int) (locDist * constraintZoomRatio);
+        }
         text.setLayoutParams(layoutParams);
     }
 
@@ -253,7 +263,7 @@ public class CompassActivity extends AppCompatActivity {
             api.putLocation(loc);
             updateAllLocs();
             setImageDirections();
-            renderDistances();
+            //renderDistances();
         });
     }
 
@@ -286,8 +296,20 @@ public class CompassActivity extends AppCompatActivity {
         return Math.sqrt(Math.pow(lonDistInMiles(lonDist, curLon), 2) + Math.pow(latDistInMiles(latDist, curLat), 2));
     }
 
+    void increaseZoom() {
+        // stub for now;
+    }
+
+    void decreaseZoom() {
+        // stub for now;
+    }
+
+    void setZoomToDefault() {
+        // stub for now;
+    }
+
     void renderDistances() {
-        double constraintToZoomRatio = constraint_size/zoom_stub;
+        double constraintToZoomRatio = constraint_size/zoom_max;
 
         ImageView house = findViewById(R.id.house);
         ConstraintLayout.LayoutParams houseLayoutParams = (ConstraintLayout.LayoutParams) house.getLayoutParams();
@@ -301,7 +323,7 @@ public class CompassActivity extends AppCompatActivity {
         double familyDist = distInMiles(familyLat, familyLon, lat, lon);
         Log.i("OUR_LONG_LAT", String.valueOf(lat) + " " + String.valueOf(lon));
 
-        if (houseDist > zoom_stub){
+        if (houseDist > zoom_max){
             houseLayoutParams.circleRadius = 500;
         } else {
             houseLayoutParams.circleRadius = (int) (houseDist * constraintToZoomRatio);
@@ -309,14 +331,14 @@ public class CompassActivity extends AppCompatActivity {
         //Log.i("HOUSE_LONG_LAT", String.valueOf(houseLat) + " " + String.valueOf(houseLon));
         //Log.i("HOUSE_DIST", String.valueOf(houseDist));
 
-        if (friendDist > zoom_stub){
+        if (friendDist > zoom_max){
             friendLayoutParams.circleRadius = 500;
         } else {
             friendLayoutParams.circleRadius = (int) (friendDist * constraintToZoomRatio);
         }
         //Log.i("FRIEND_LONG_LAT", String.valueOf(friendLat) + " " + String.valueOf(friendLon));
 
-        if (familyDist > zoom_stub){
+        if (familyDist > zoom_max){
             familyLayoutParams.circleRadius = 500;
         } else {
             familyLayoutParams.circleRadius = (int) (familyDist * constraintToZoomRatio);
