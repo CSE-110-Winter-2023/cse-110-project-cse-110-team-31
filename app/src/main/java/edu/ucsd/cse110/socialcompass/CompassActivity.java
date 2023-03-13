@@ -52,6 +52,9 @@ public class CompassActivity extends AppCompatActivity {
     ArrayList<LiveData<Location>> liveLocs;
     ArrayList<Location> locs;
     ArrayList<TextView> friends;
+    double zoom_stub = 10;
+
+    int constraint_size = 500;
 
     boolean houseDisplay, friendDisplay, familyDisplay;
     double friendLat, friendLon;
@@ -251,6 +254,7 @@ public class CompassActivity extends AppCompatActivity {
             api.putLocation(loc);
             updateAllLocs();
             setImageDirections();
+            renderDistances();
         });
     }
 
@@ -261,7 +265,7 @@ public class CompassActivity extends AppCompatActivity {
         renderImage(family, familyLat, familyLon);
         ImageView house = findViewById(R.id.house);
         renderImage(house, houseLat, houseLon);
-        stackIcons();
+        //stackIcons();
     }
 
     void renderImage(ImageView image, double otherLat, double otherLon) {
@@ -269,6 +273,61 @@ public class CompassActivity extends AppCompatActivity {
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) image.getLayoutParams();
         layoutParams.circleAngle = (float)(degrees-orient*(180 / Math.PI));
         image.setLayoutParams(layoutParams);
+    }
+
+    public static double latDistInMiles(double latDist, double curLat){
+        return Math.abs(latDist - curLat) * 69;
+    }
+
+    public static double lonDistInMiles(double lonDist, double curLon){
+        return Math.abs(lonDist - curLon) * 54.6;
+    }
+
+    public static double distInMiles(double latDist, double lonDist, double curLat, double curLon){
+        return Math.sqrt(Math.pow(lonDistInMiles(lonDist, curLon), 2) + Math.pow(latDistInMiles(latDist, curLat), 2));
+    }
+
+    void renderDistances() {
+        double constraintToZoomRatio = constraint_size/zoom_stub;
+
+        ImageView house = findViewById(R.id.house);
+        ConstraintLayout.LayoutParams houseLayoutParams = (ConstraintLayout.LayoutParams) house.getLayoutParams();
+        ImageView friend = findViewById(R.id.friend);
+        ConstraintLayout.LayoutParams friendLayoutParams = (ConstraintLayout.LayoutParams) friend.getLayoutParams();
+        ImageView family = findViewById(R.id.family);
+        ConstraintLayout.LayoutParams familyLayoutParams = (ConstraintLayout.LayoutParams) family.getLayoutParams();
+
+        double houseDist = distInMiles(houseLat, houseLon, lat, lon);
+        double friendDist = distInMiles(friendLat, friendLon, lat, lon);
+        double familyDist = distInMiles(familyLat, familyLon, lat, lon);
+        Log.i("OUR_LONG_LAT", String.valueOf(lat) + " " + String.valueOf(lon));
+
+        if (houseDist > zoom_stub){
+            houseLayoutParams.circleRadius = 500;
+        } else {
+            houseLayoutParams.circleRadius = (int) (houseDist * constraintToZoomRatio);
+        }
+        //Log.i("HOUSE_LONG_LAT", String.valueOf(houseLat) + " " + String.valueOf(houseLon));
+        //Log.i("HOUSE_DIST", String.valueOf(houseDist));
+
+        if (friendDist > zoom_stub){
+            friendLayoutParams.circleRadius = 500;
+        } else {
+            friendLayoutParams.circleRadius = (int) (friendDist * constraintToZoomRatio);
+        }
+        //Log.i("FRIEND_LONG_LAT", String.valueOf(friendLat) + " " + String.valueOf(friendLon));
+
+        if (familyDist > zoom_stub){
+            familyLayoutParams.circleRadius = 500;
+        } else {
+            familyLayoutParams.circleRadius = (int) (familyDist * constraintToZoomRatio);
+        }
+        //Log.i("FAMILY_LONG_LAT", String.valueOf(familyLat) + " " + String.valueOf(familyLon));
+        //Log.i("FAMILY_DIST", String.valueOf(familyDist));
+
+        house.setLayoutParams(houseLayoutParams);
+        friend.setLayoutParams(friendLayoutParams);
+        family.setLayoutParams(familyLayoutParams);
     }
 
     void stackIcons() {
