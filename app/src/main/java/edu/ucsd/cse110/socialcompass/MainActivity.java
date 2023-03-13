@@ -10,7 +10,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Intent add_locations_activity = new Intent(this, AddLocationsActivity.class);
+        Intent add_locations_activity = new Intent(this, AddFriendActivity.class);
         startActivity(add_locations_activity);
 
         super.onCreate(savedInstanceState);

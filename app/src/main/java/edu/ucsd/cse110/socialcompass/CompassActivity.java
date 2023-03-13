@@ -4,6 +4,7 @@ import static android.view.View.INVISIBLE;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -14,14 +15,20 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import edu.ucsd.cse110.socialcompass.model.Location;
 import edu.ucsd.cse110.socialcompass.model.LocationAPI;
+import edu.ucsd.cse110.socialcompass.model.LocationRepository;
 import edu.ucsd.cse110.socialcompass.model.LocationViewModel;
 
 public class CompassActivity extends AppCompatActivity {
@@ -39,6 +46,11 @@ public class CompassActivity extends AppCompatActivity {
     double lat, lon;
     double orient = 0;
 
+    String[] uids = {"ranatest2", "ranatest5"};
+
+    ArrayList<LiveData<Location>> liveLocs;
+    ArrayList<Location> locs;
+    ArrayList<TextView> friends;
     double zoom_stub = 10;
 
     int constraint_size = 500;
@@ -70,14 +82,81 @@ public class CompassActivity extends AppCompatActivity {
         updateLocation();
         if(!mockOrientationWithBox()) updateOrientation();
 
-        setFriendLocation();
+        ConstraintLayout compass = findViewById(R.id.compass);
 
+        ImageView friend = findViewById(R.id.friend);
+
+        getUIDs();
+
+        liveLocs = new ArrayList<>();
+        locs = new ArrayList<>();
+        friends = new ArrayList<>();
+
+        for(int i=0; i<uids.length; i++) {
+            LocationRepository repo = new LocationRepository();
+            Log.i("ADDED", uids[i]+"");
+            LiveData<Location> liveLoc = repo.getRemote(uids[i]);
+            Location l = new Location(uids[i]);
+            liveLoc.observe(this, this::onLocChanged);
+            liveLocs.add(liveLoc);
+            locs.add(l);
+        }
+
+        for(int i=0; i<uids.length; i++) {
+            TextView temp = new TextView(this);
+            temp.setText(uids[i]);
+            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) friend.getLayoutParams();
+            ConstraintLayout.LayoutParams copy = new ConstraintLayout.LayoutParams((ViewGroup.LayoutParams)params);
+
+            compass.addView(temp);
+            copy.circleConstraint = compass.getId();
+
+            copy.circleAngle = i*50;
+            copy.circleRadius = 500;
+            temp.setLayoutParams(copy);
+
+            friends.add(temp);
+        }
+
+        friend.setVisibility(INVISIBLE);
+    }
+
+    public void updateAllLocs() {
+        for(int i=0; i<locs.size(); i++) {
+            updateLoc(i);
+        }
+    }
+    public void updateLoc(int i) {
+        TextView currView = friends.get(i);
+        Location currLoc = locs.get(i);
+        currView.setText(currLoc.label);
+        renderText(currView, currLoc.latitude, currLoc.longitude);
+    }
+
+    void renderText(TextView text, double otherLat, double otherLon) {
+        double degrees = angleFromCoordinate(lat, lon, otherLat, otherLon);
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) text.getLayoutParams();
+        layoutParams.circleAngle = (float)(degrees-orient*(180 / Math.PI));
+        // TODO: add this line
+        // layoutParams.circleRadius = ???;
+        text.setLayoutParams(layoutParams);
+    }
+
+    public void onLocChanged(Location changeLoc) {
+        for(int i=0; i<locs.size(); i++) {
+            if(locs.get(i).UID.equals(changeLoc.UID)) {
+                locs.set(i, changeLoc);
+                Log.i("GOT LOC", changeLoc.UID);
+                updateLoc(i);
+            }
+        }
     }
 
     void updateOrientation() {
         orientationService.getOrientation().observe(this, orientation -> {
             orient = orientation;
             setImageDirections();
+            updateAllLocs();
         });
     }
 
@@ -98,12 +177,24 @@ public class CompassActivity extends AppCompatActivity {
         return false;
     }
 
+    public void getUIDs() {
+        SharedPreferences preferences = getSharedPreferences("UIDs", MODE_PRIVATE);
+        Set<String> uidSet = preferences.getStringSet("UIDs", new HashSet<>());
+
+        uids = new String[uidSet.size()];
+        int c=0;
+        for(String s : uidSet) {
+            uids[c++] = s;
+        }
+    }
+
     public void getLocations(){
         SharedPreferences preferences = getSharedPreferences("Locations", MODE_PRIVATE);
 
-        houseDisplay=true;
-        friendDisplay=true;
-        familyDisplay=true;
+        // for now, just have them be set to invisible
+        houseDisplay=false;
+        friendDisplay=false;
+        familyDisplay=false;
 
         try {
             if((!preferences.contains("my_long")||(!preferences.contains("my_lat")))) houseDisplay = false;
@@ -160,21 +251,10 @@ public class CompassActivity extends AppCompatActivity {
             loc.latitude = location.first;
             loc.longitude = location.second;
             api.putLocation(loc);
+            updateAllLocs();
             setImageDirections();
             renderDistances();
         });
-    }
-
-    LiveData<Location> friendLoc;
-    void setFriendLocation() {
-        var viewModel = new ViewModelProvider(this).get(LocationViewModel.class);
-        friendLoc = viewModel.getNote("ranatest5");
-        friendLoc.observe(this, this::onLocChanged);
-    }
-
-    public void onLocChanged(Location changeLoc) {
-        friendLat = changeLoc.latitude;
-        friendLon = changeLoc.longitude;
     }
 
     void setImageDirections() {

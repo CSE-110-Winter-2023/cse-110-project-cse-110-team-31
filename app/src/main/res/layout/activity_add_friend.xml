@@ -47,4 +47,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/enterFriendID"
         app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/removeFriendsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="52dp"
+        android:layout_marginTop="40dp"
+        android:onClick="onDeleteButtonClicked"
+        android:text="delete"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/enterFriendID"
+        app:layout_constraintVertical_bias="0.216" />
+
+    <Button
+        android:id="@+id/cont_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Continue"
+        android:onClick="onContinueButtonClicked"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/removeFriendsButton"
+        app:layout_constraintVertical_bias="0.185" />
 </androidx.constraintlayout.widget.ConstraintLayout>

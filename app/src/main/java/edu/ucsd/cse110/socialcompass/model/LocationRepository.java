@@ -15,7 +15,7 @@ public class LocationRepository {
     LocationAPI api = LocationAPI.provide();
     private ScheduledFuture<?> locationFuture;
 
-    LocationRepository() {}
+    public LocationRepository() {}
 
     public LiveData<Location> getRemote(String UID) {
         if(locationFuture!=null&&!locationFuture.isCancelled()) {
