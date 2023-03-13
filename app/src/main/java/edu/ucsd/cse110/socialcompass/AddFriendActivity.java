@@ -15,12 +15,10 @@ import java.util.Set;
 
 public class AddFriendActivity extends AppCompatActivity {
 
-//    ArrayList<String> arr = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friend);
-//        loadUIDs();
     }
 
 
@@ -34,7 +32,7 @@ public class AddFriendActivity extends AppCompatActivity {
         saveUIDs(); //save uid as a param
 
         //alert that friend is added if successfully added
-        if(addSuccessful) Utilities.showAlert(this,"Friend Added Successfully", "Add another friend by entering their uid");
+        if(addSuccessful) Utilities.showAlert(this,"Friend Added Successfully", "Add another friend by entering their UID");
         else Utilities.showAlert(this,"Unable to Add Friend", "Error while adding user with entered UID");
 
         //reset text box
@@ -56,14 +54,6 @@ public class AddFriendActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void loadUIDs() {
-        SharedPreferences preferences = getSharedPreferences("UIDs", MODE_PRIVATE);
-        String UID_val = preferences.getString("UID_label", "");
-        TextView UID_val_view = findViewById(R.id.enterFriendID);
-        if(preferences.contains("UID_val")) UID_val_view.setText(UID_val);
-//        UID_val_view.setText(UID_val);
-    }
-
     public void saveUIDs() {
         SharedPreferences preferences = getSharedPreferences("UIDs", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -75,12 +65,6 @@ public class AddFriendActivity extends AppCompatActivity {
         existingUIDs.add(UID_val_view.getText().toString());
 
         editor.putStringSet("UIDs", existingUIDs);
-
-//        editor.putString("UID_label", UID_val_view.getText().toString());
-//        arr.add(UID_val_view.getText().toString());
-        //add an array here
-        //TextView orientation_test = findViewById(R.id.orientation_test);
-        //if(!orientation_test.getText().toString().equals("")) editor.putFloat("orientation", Float.parseFloat(orientation_test.getText().toString()));
 
         editor.apply();
     }
