@@ -46,7 +46,6 @@ public class CompassActivity extends AppCompatActivity {
     double lat, lon;
     double orient = 0;
 
-    // TODO: read from sharedpreferences (from the AddFriendActivity)
     String[] uids = {"ranatest2", "ranatest5"};
 
     ArrayList<LiveData<Location>> liveLocs;
