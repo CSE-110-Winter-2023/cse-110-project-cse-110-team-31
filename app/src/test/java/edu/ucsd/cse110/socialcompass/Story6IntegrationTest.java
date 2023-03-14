@@ -40,5 +40,7 @@ public class Story6IntegrationTest {
             editor.clear();
             editor.apply();
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 }

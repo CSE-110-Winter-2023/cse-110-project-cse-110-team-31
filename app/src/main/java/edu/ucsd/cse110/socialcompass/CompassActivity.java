@@ -43,13 +43,13 @@ public class CompassActivity extends AppCompatActivity {
 
     // TODO: these two need to be updated by sharedpreferences or something
     String UID = "ranatest4";
-    String label = "hi I am Rana";
+    String label = "";
     String priv_key = "notouch";
 
     double lat, lon;
     double orient = 0;
 
-    String[] uids = {"ranatest2", "ranatest5"};
+    String[] uids;
 
     ArrayList<LiveData<Location>> liveLocs;
     ArrayList<Location> locs;
@@ -78,6 +78,8 @@ public class CompassActivity extends AppCompatActivity {
         locationService = LocationService.singleton(this);
         orientationService = OrientationService.singleton(this);
 
+        readLabelFromSP();
+
         loc = new Location(UID);
         api = LocationAPI.provide();
         loc.label = label;
@@ -87,11 +89,15 @@ public class CompassActivity extends AppCompatActivity {
         updateLocation();
         if(!mockOrientationWithBox()) updateOrientation();
 
+        getUIDs();
+
+        setUpUIDs();
+    }
+
+    public void setUpUIDs() {
         ConstraintLayout compass = findViewById(R.id.compass);
 
         ImageView friend = findViewById(R.id.friend);
-
-        getUIDs();
 
         liveLocs = new ArrayList<>();
         locs = new ArrayList<>();
@@ -133,6 +139,10 @@ public class CompassActivity extends AppCompatActivity {
         }
 
         friend.setVisibility(INVISIBLE);
+    }
+    public void readLabelFromSP() {
+        SharedPreferences preferences = getSharedPreferences("Name", MODE_PRIVATE);
+        label = preferences.getString("enter_name", "ERROR");
     }
 
     public void updateAllLocs() {
