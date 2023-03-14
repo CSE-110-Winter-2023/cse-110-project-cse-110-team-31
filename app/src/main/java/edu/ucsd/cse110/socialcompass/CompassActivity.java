@@ -4,21 +4,56 @@ import static android.view.View.INVISIBLE;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
+import edu.ucsd.cse110.socialcompass.model.Location;
+import edu.ucsd.cse110.socialcompass.model.LocationAPI;
+import edu.ucsd.cse110.socialcompass.model.LocationRepository;
+import edu.ucsd.cse110.socialcompass.model.LocationViewModel;
 
 public class CompassActivity extends AppCompatActivity {
     public LocationService locationService;
     public OrientationService orientationService;
 
+    Location loc;
+    LocationAPI api;
+
+    // TODO: these two need to be updated by sharedpreferences or something
+    String UID = "ranatest4";
+    String label = "hi I am Rana";
+    String priv_key = "notouch";
+
     double lat, lon;
     double orient = 0;
+
+    String[] uids = {"ranatest2", "ranatest5"};
+
+    ArrayList<LiveData<Location>> liveLocs;
+    ArrayList<Location> locs;
+    ArrayList<TextView> friends;
+    double zoom_stub = 10;
+
+    int constraint_size = 500;
 
     boolean houseDisplay, friendDisplay, familyDisplay;
     double friendLat, friendLon;
@@ -38,15 +73,90 @@ public class CompassActivity extends AppCompatActivity {
         locationService = LocationService.singleton(this);
         orientationService = OrientationService.singleton(this);
 
+        loc = new Location(UID);
+        api = LocationAPI.provide();
+        loc.label = label;
+        loc.private_code = priv_key;
+
         getLocations();
         updateLocation();
         if(!mockOrientationWithBox()) updateOrientation();
+
+        ConstraintLayout compass = findViewById(R.id.compass);
+
+        ImageView friend = findViewById(R.id.friend);
+
+        getUIDs();
+
+        liveLocs = new ArrayList<>();
+        locs = new ArrayList<>();
+        friends = new ArrayList<>();
+
+        for(int i=0; i<uids.length; i++) {
+            LocationRepository repo = new LocationRepository();
+            Log.i("ADDED", uids[i]+"");
+            LiveData<Location> liveLoc = repo.getRemote(uids[i]);
+            Location l = new Location(uids[i]);
+            liveLoc.observe(this, this::onLocChanged);
+            liveLocs.add(liveLoc);
+            locs.add(l);
+        }
+
+        for(int i=0; i<uids.length; i++) {
+            TextView temp = new TextView(this);
+            temp.setText(uids[i]);
+            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) friend.getLayoutParams();
+            ConstraintLayout.LayoutParams copy = new ConstraintLayout.LayoutParams((ViewGroup.LayoutParams)params);
+
+            compass.addView(temp);
+            copy.circleConstraint = compass.getId();
+
+            copy.circleAngle = i*50;
+            copy.circleRadius = 500;
+            temp.setLayoutParams(copy);
+
+            friends.add(temp);
+        }
+
+        friend.setVisibility(INVISIBLE);
+    }
+
+    public void updateAllLocs() {
+        for(int i=0; i<locs.size(); i++) {
+            updateLoc(i);
+        }
+    }
+    public void updateLoc(int i) {
+        TextView currView = friends.get(i);
+        Location currLoc = locs.get(i);
+        currView.setText(currLoc.label);
+        renderText(currView, currLoc.latitude, currLoc.longitude);
+    }
+
+    void renderText(TextView text, double otherLat, double otherLon) {
+        double degrees = angleFromCoordinate(lat, lon, otherLat, otherLon);
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) text.getLayoutParams();
+        layoutParams.circleAngle = (float)(degrees-orient*(180 / Math.PI));
+        // TODO: add this line
+        // layoutParams.circleRadius = ???;
+        text.setLayoutParams(layoutParams);
+    }
+
+    public void onLocChanged(Location changeLoc) {
+        for(int i=0; i<locs.size(); i++) {
+            if(locs.get(i).UID.equals(changeLoc.UID)) {
+                locs.set(i, changeLoc);
+                Log.i("GOT LOC", changeLoc.UID);
+                updateLoc(i);
+            }
+        }
     }
 
     void updateOrientation() {
         orientationService.getOrientation().observe(this, orientation -> {
             orient = orientation;
             setImageDirections();
+            updateAllLocs();
         });
     }
 
@@ -67,12 +177,24 @@ public class CompassActivity extends AppCompatActivity {
         return false;
     }
 
+    public void getUIDs() {
+        SharedPreferences preferences = getSharedPreferences("UIDs", MODE_PRIVATE);
+        Set<String> uidSet = preferences.getStringSet("UIDs", new HashSet<>());
+
+        uids = new String[uidSet.size()];
+        int c=0;
+        for(String s : uidSet) {
+            uids[c++] = s;
+        }
+    }
+
     public void getLocations(){
         SharedPreferences preferences = getSharedPreferences("Locations", MODE_PRIVATE);
 
-        houseDisplay=true;
-        friendDisplay=true;
-        familyDisplay=true;
+        // for now, just have them be set to invisible
+        houseDisplay=false;
+        friendDisplay=false;
+        familyDisplay=false;
 
         try {
             if((!preferences.contains("my_long")||(!preferences.contains("my_lat")))) houseDisplay = false;
@@ -123,10 +245,15 @@ public class CompassActivity extends AppCompatActivity {
     }
 
     void updateLocation() {
-        locationService.getLocation().observe(this, loc -> {
-            lat = loc.first;
-            lon = loc.second;
+        locationService.getLocation().observe(this, location -> {
+            lat = location.first;
+            lon = location.second;
+            loc.latitude = location.first;
+            loc.longitude = location.second;
+            api.putLocation(loc);
+            updateAllLocs();
             setImageDirections();
+            renderDistances();
         });
     }
 
@@ -137,14 +264,69 @@ public class CompassActivity extends AppCompatActivity {
         renderImage(family, familyLat, familyLon);
         ImageView house = findViewById(R.id.house);
         renderImage(house, houseLat, houseLon);
-        stackIcons();
+        //stackIcons();
     }
 
     void renderImage(ImageView image, double otherLat, double otherLon) {
         double degrees = angleFromCoordinate(lat, lon, otherLat, otherLon);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) image.getLayoutParams();
-        layoutParams.circleAngle = (float)(degrees+orient*(180 / Math.PI));
+        layoutParams.circleAngle = (float)(degrees-orient*(180 / Math.PI));
         image.setLayoutParams(layoutParams);
+    }
+
+    public static double latDistInMiles(double latDist, double curLat){
+        return Math.abs(latDist - curLat) * 69;
+    }
+
+    public static double lonDistInMiles(double lonDist, double curLon){
+        return Math.abs(lonDist - curLon) * 54.6;
+    }
+
+    public static double distInMiles(double latDist, double lonDist, double curLat, double curLon){
+        return Math.sqrt(Math.pow(lonDistInMiles(lonDist, curLon), 2) + Math.pow(latDistInMiles(latDist, curLat), 2));
+    }
+
+    void renderDistances() {
+        double constraintToZoomRatio = constraint_size/zoom_stub;
+
+        ImageView house = findViewById(R.id.house);
+        ConstraintLayout.LayoutParams houseLayoutParams = (ConstraintLayout.LayoutParams) house.getLayoutParams();
+        ImageView friend = findViewById(R.id.friend);
+        ConstraintLayout.LayoutParams friendLayoutParams = (ConstraintLayout.LayoutParams) friend.getLayoutParams();
+        ImageView family = findViewById(R.id.family);
+        ConstraintLayout.LayoutParams familyLayoutParams = (ConstraintLayout.LayoutParams) family.getLayoutParams();
+
+        double houseDist = distInMiles(houseLat, houseLon, lat, lon);
+        double friendDist = distInMiles(friendLat, friendLon, lat, lon);
+        double familyDist = distInMiles(familyLat, familyLon, lat, lon);
+        Log.i("OUR_LONG_LAT", String.valueOf(lat) + " " + String.valueOf(lon));
+
+        if (houseDist > zoom_stub){
+            houseLayoutParams.circleRadius = 500;
+        } else {
+            houseLayoutParams.circleRadius = (int) (houseDist * constraintToZoomRatio);
+        }
+        //Log.i("HOUSE_LONG_LAT", String.valueOf(houseLat) + " " + String.valueOf(houseLon));
+        //Log.i("HOUSE_DIST", String.valueOf(houseDist));
+
+        if (friendDist > zoom_stub){
+            friendLayoutParams.circleRadius = 500;
+        } else {
+            friendLayoutParams.circleRadius = (int) (friendDist * constraintToZoomRatio);
+        }
+        //Log.i("FRIEND_LONG_LAT", String.valueOf(friendLat) + " " + String.valueOf(friendLon));
+
+        if (familyDist > zoom_stub){
+            familyLayoutParams.circleRadius = 500;
+        } else {
+            familyLayoutParams.circleRadius = (int) (familyDist * constraintToZoomRatio);
+        }
+        //Log.i("FAMILY_LONG_LAT", String.valueOf(familyLat) + " " + String.valueOf(familyLon));
+        //Log.i("FAMILY_DIST", String.valueOf(familyDist));
+
+        house.setLayoutParams(houseLayoutParams);
+        friend.setLayoutParams(friendLayoutParams);
+        family.setLayoutParams(familyLayoutParams);
     }
 
     void stackIcons() {
