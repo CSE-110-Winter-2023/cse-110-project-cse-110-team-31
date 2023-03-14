@@ -10,11 +10,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Intent add_locations_activity = new Intent(this, EnterNameActivity.class);
+        Intent add_locations_activity = new Intent(this, AddFriendActivity.class);
         startActivity(add_locations_activity);
 
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main); // changed back to activity_main
+        setContentView(R.layout.activity_main);
     }
 
     public void onLaunchCompass(View view) {
