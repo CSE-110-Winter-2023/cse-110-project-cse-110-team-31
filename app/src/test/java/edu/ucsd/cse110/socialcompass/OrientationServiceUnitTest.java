@@ -33,5 +33,7 @@ public class OrientationServiceUnitTest {
 
             assert activity.orient == 170.0f;
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 }
