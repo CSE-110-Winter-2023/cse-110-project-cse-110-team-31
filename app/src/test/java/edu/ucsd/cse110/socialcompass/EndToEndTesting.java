@@ -75,5 +75,7 @@ public class EndToEndTesting {
 
             assert Math.round(houseLayoutParams.circleAngle) == -90 && Math.round(friendLayoutParams.circleAngle) == 0;
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 }

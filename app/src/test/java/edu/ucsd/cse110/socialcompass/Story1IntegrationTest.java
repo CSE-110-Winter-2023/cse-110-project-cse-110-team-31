@@ -43,6 +43,8 @@ public class Story1IntegrationTest {
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) friendIcon.getLayoutParams();
             assert layoutParams.circleAngle == CompassActivity.angleFromCoordinate(0, 5, 5, 5);
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 
     @Test
@@ -72,5 +74,7 @@ public class Story1IntegrationTest {
             assert layoutParamsF.circleAngle == CompassActivity.angleFromCoordinate(0, 5, 5, 5)
                     && layoutParamsH.circleAngle == CompassActivity.angleFromCoordinate(0, 5, 0, 0);
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 }

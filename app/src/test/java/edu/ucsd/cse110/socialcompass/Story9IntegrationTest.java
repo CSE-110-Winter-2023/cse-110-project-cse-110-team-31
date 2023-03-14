@@ -36,6 +36,8 @@ public class Story9IntegrationTest {
         scenarioAddFriend.onActivity(activity -> {
             TextView uidEntry = (TextView) activity.findViewById(R.id.enterFriendID);
             Button submit_button = (Button) activity.findViewById(R.id.addFriendSubmitButton);
+            Button delete_button = (Button) activity.findViewById(R.id.removeFriendsButton);
+            delete_button.performClick();
             uidEntry.setText("ranatest2");
             submit_button.performClick();
         });
@@ -45,11 +47,16 @@ public class Story9IntegrationTest {
 
         scenario.onActivity(activity -> {
             boolean uidExists=false;
-            for(int i=0; i<activity.uids.length; i++) {
-                if(activity.uids[i].equals("ranatest2")) uidExists=true;
+            for(int i=0; i < activity.uids.length; i++) {
+                if(activity.uids[i].equals("ranatest2")) {
+                    uidExists=true;
+                    break;
+                }
             }
             assert uidExists;
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 
     @Test
@@ -61,6 +68,8 @@ public class Story9IntegrationTest {
         scenarioAddFriend.onActivity(activity -> {
             TextView uidEntry = (TextView) activity.findViewById(R.id.enterFriendID);
             Button submit_button = (Button) activity.findViewById(R.id.addFriendSubmitButton);
+            Button delete_button = (Button) activity.findViewById(R.id.removeFriendsButton);
+            delete_button.performClick();
             uidEntry.setText("ranatest2");
             submit_button.performClick();
             uidEntry.setText("ranatest5");
@@ -72,14 +81,15 @@ public class Story9IntegrationTest {
 
         scenario.onActivity(activity -> {
             boolean uid1Exists=false;
-            for(int i=0; i<activity.uids.length; i++) {
-                if(activity.uids[i].equals("ranatest2")) uid1Exists=true;
-            }
             boolean uid2Exists=false;
             for(int i=0; i<activity.uids.length; i++) {
-                if(activity.uids[i].equals("ranatest5")) uid2Exists=true;
+                if (activity.uids[i].equals("ranatest2")) uid1Exists = true;
+                else if (activity.uids[i].equals("ranatest5")) uid2Exists=true;
+                if (uid1Exists && uid2Exists) break;
             }
             assert uid1Exists && uid2Exists;
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 }
