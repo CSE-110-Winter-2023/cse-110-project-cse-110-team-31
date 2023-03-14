@@ -36,6 +36,9 @@ public class Story2IntegrationTest {
             TextView my_long_view = (TextView) activity2.findViewById(R.id.family_long_view);
             assertEquals("1.0", my_long_view.getText().toString());
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
+        scenario2.moveToState(Lifecycle.State.DESTROYED);
     }
 
     @Test
@@ -67,8 +70,10 @@ public class Story2IntegrationTest {
                 assertEquals("2.0", my_long2_view_2.getText().toString());
                 assertEquals("3.0", my_lat3_view_2.getText().toString());
             });
-
+            scenario2.moveToState(Lifecycle.State.DESTROYED);
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 
     @Test
@@ -85,6 +90,8 @@ public class Story2IntegrationTest {
         });
 
         assertEquals(scenario.getState(), Lifecycle.State.STARTED);
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 
     @Test
@@ -113,7 +120,7 @@ public class Story2IntegrationTest {
             assertEquals("2.0", my_lat_view.getText().toString());
         });
 
-
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 
     @Test
@@ -138,6 +145,6 @@ public class Story2IntegrationTest {
             assertEquals("", my_long_view.getText().toString());
         });
 
-
+        scenario2.moveToState(Lifecycle.State.DESTROYED);
     }
 }

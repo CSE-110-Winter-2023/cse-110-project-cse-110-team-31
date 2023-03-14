@@ -59,6 +59,8 @@ public class Story11IntegrationTest {
                 }
             }
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 
     @Test
@@ -146,6 +148,8 @@ public class Story11IntegrationTest {
 //                }
 //            }
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 
     @Test
@@ -177,5 +181,7 @@ public class Story11IntegrationTest {
                 }
             }
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 }

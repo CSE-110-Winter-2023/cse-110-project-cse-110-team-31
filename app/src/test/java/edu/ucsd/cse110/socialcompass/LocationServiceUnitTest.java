@@ -35,5 +35,7 @@ public class LocationServiceUnitTest {
 
             assert activity.lat == 45.0d && activity.lon == 55.0d;
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 }

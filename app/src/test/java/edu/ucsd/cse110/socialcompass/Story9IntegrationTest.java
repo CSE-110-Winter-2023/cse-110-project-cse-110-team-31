@@ -36,6 +36,8 @@ public class Story9IntegrationTest {
         scenarioAddFriend.onActivity(activity -> {
             TextView uidEntry = (TextView) activity.findViewById(R.id.enterFriendID);
             Button submit_button = (Button) activity.findViewById(R.id.addFriendSubmitButton);
+            Button delete_button = (Button) activity.findViewById(R.id.removeFriendsButton);
+            delete_button.performClick();
             uidEntry.setText("ranatest2");
             submit_button.performClick();
         });
@@ -53,6 +55,8 @@ public class Story9IntegrationTest {
             }
             assert uidExists;
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 
     @Test
@@ -64,6 +68,8 @@ public class Story9IntegrationTest {
         scenarioAddFriend.onActivity(activity -> {
             TextView uidEntry = (TextView) activity.findViewById(R.id.enterFriendID);
             Button submit_button = (Button) activity.findViewById(R.id.addFriendSubmitButton);
+            Button delete_button = (Button) activity.findViewById(R.id.removeFriendsButton);
+            delete_button.performClick();
             uidEntry.setText("ranatest2");
             submit_button.performClick();
             uidEntry.setText("ranatest5");
@@ -83,5 +89,7 @@ public class Story9IntegrationTest {
             }
             assert uid1Exists && uid2Exists;
         });
+
+        scenario.moveToState(Lifecycle.State.DESTROYED);
     }
 }
