@@ -13,8 +13,11 @@ import androidx.lifecycle.ViewModelProvider;
 import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -106,19 +109,25 @@ public class CompassActivity extends AppCompatActivity {
 
         for(int i=0; i<uids.length; i++) {
             TextView temp = new TextView(this);
-
-
-
+            ImageView dot = new ImageView(this);
+            dot.setImageResource(R.drawable.dot_icon2);
+            dot.setScaleType(ImageView.ScaleType.FIT_CENTER);
             temp.setText(uids[i]);
+            temp.setShadowLayer((float) 1.6, (float) -1.5, (float) 1.3, -1);
+
             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) friend.getLayoutParams();
             ConstraintLayout.LayoutParams copy = new ConstraintLayout.LayoutParams((ViewGroup.LayoutParams)params);
 
+            compass.addView(dot);
             compass.addView(temp);
             copy.circleConstraint = compass.getId();
-
             copy.circleAngle = i*50;
             copy.circleRadius = 500;
+            copy.height = 50;
+            copy.width = 250;
+
             temp.setLayoutParams(copy);
+            dot.setLayoutParams(copy);
 
             friends.add(temp);
         }
@@ -146,8 +155,10 @@ public class CompassActivity extends AppCompatActivity {
         double locDist = distInMiles(otherLat, otherLon, lat, lon);
         if (locDist > zoom_max){
             layoutParams.circleRadius = 500;
+            text.setVisibility(View.INVISIBLE);
         } else {
             layoutParams.circleRadius = (int) (locDist * constraintZoomRatio);
+            text.setVisibility(View.VISIBLE);
         }
         text.setLayoutParams(layoutParams);
     }
@@ -161,6 +172,8 @@ public class CompassActivity extends AppCompatActivity {
             }
         }
     }
+
+
 
     void updateOrientation() {
         orientationService.getOrientation().observe(this, orientation -> {

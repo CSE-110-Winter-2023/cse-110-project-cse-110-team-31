@@ -2,6 +2,7 @@ package edu.ucsd.cse110.socialcompass;
 
 import android.os.Looper;
 import android.util.Pair;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -144,6 +145,37 @@ public class Story11IntegrationTest {
 //                            layoutParams.circleRadius < 1.6 * activity.constraintZoomRatio;
 //                }
 //            }
+        });
+    }
+
+    @Test
+    public void testLabelDisappearsAtPerimeter(){
+        var scenarioAddFriend = ActivityScenario.launch(AddFriendActivity.class);
+        scenarioAddFriend.moveToState(Lifecycle.State.CREATED);
+        scenarioAddFriend.moveToState(Lifecycle.State.STARTED);
+
+        scenarioAddFriend.onActivity(activity -> {
+            TextView uidEntry = (TextView) activity.findViewById(R.id.enterFriendID);
+            Button submit_button = (Button) activity.findViewById(R.id.addFriendSubmitButton);
+            uidEntry.setText("ranatest5");
+            submit_button.performClick();
+        });
+
+        var scenario = ActivityScenario.launch(CompassActivity.class);
+        scenario.moveToState(Lifecycle.State.STARTED);
+
+        scenario.onActivity(activity -> {
+            // setting it to be Geisel library for standardized purposes of Github CI
+            activity.setZoomToDefault();
+            activity.lon = -117.2376;
+            activity.lat = 32.8811;
+            for(int i=0; i<activity.uids.length; i++) {
+                if(activity.uids[i].equals("ranatest5")) {
+                    activity.updateLoc(i);
+                    TextView locView = activity.friends.get(i);
+                    assert locView.getVisibility() == View.INVISIBLE;
+                }
+            }
         });
     }
 }
