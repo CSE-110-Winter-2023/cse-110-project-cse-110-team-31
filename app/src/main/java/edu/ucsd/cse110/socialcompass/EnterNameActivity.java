@@ -14,19 +14,16 @@ import android.view.View;
 import android.widget.TextView;
 
 public class EnterNameActivity extends AppCompatActivity {
-//    private SharedPreferences preferences = getSharedPreferences("Name", MODE_PRIVATE);
-//    private SharedPreferences.Editor editor = preferences.edit();
 
-    // Possible TODO: on enter in the edit text click text
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_name);
 
         SharedPreferences preferences = getSharedPreferences("Name", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
         String user_name = preferences.getString("enter_name", null);
 
+        // if name is already entered in shared preferences don't ask again
         if (user_name != null){
             Log.i("ENTER_NAME_ACT","NAME FOUND: " + user_name);
             nextPage();
@@ -39,7 +36,6 @@ public class EnterNameActivity extends AppCompatActivity {
         nextPage();
     }
 
-    // Possible TODO: check for if name is not entered or bad values are entered (weird stuff etc..)
     public void saveName() {
         SharedPreferences preferences = getSharedPreferences("Name", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
@@ -60,7 +56,8 @@ public class EnterNameActivity extends AppCompatActivity {
     }
 
     public void nextPage(){
-        Intent intent = new Intent(this, CompassActivity.class);// TODO: change to 2.2 wireframe class
+        // TODO: change AddFriendActivity to 2.2 wireframe class ExchangeFriendUIDActivity
+        Intent intent = new Intent(this, AddFriendActivity.class);
         startActivity(intent);
     }
 

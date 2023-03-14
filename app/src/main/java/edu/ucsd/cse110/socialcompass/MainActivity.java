@@ -10,7 +10,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Intent add_locations_activity = new Intent(this, AddFriendActivity.class);
+        Intent add_locations_activity = new Intent(this, EnterNameActivity.class); // TODO change back to AddFriendActivity
         startActivity(add_locations_activity);
 
         super.onCreate(savedInstanceState);
@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onLaunchCompass(View view) {
-        Intent intent = new Intent(this, CompassActivity.class);
+        Intent intent = new Intent(this, CompassActivity.class); // TODO change back to CompassActivity
         startActivity(intent);
     }
 }
