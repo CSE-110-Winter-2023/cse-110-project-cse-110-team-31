@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.socialcompass;
 
 import static android.view.View.INVISIBLE;
+import static android.view.View.TEXT_ALIGNMENT_CENTER;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -16,7 +17,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.TextPaint;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -54,6 +57,7 @@ public class CompassActivity extends AppCompatActivity {
     ArrayList<LiveData<Location>> liveLocs;
     ArrayList<Location> locs;
     ArrayList<TextView> friends;
+    ArrayList<ImageView> dots;
     double zoom_max = 10;
 
     int constraint_size = 500;
@@ -102,6 +106,7 @@ public class CompassActivity extends AppCompatActivity {
         liveLocs = new ArrayList<>();
         locs = new ArrayList<>();
         friends = new ArrayList<>();
+        dots = new ArrayList<>();
 
         for(int i=0; i<uids.length; i++) {
             LocationRepository repo = new LocationRepository();
@@ -119,6 +124,8 @@ public class CompassActivity extends AppCompatActivity {
             dot.setImageResource(R.drawable.dot_icon2);
             dot.setScaleType(ImageView.ScaleType.FIT_CENTER);
             temp.setText(uids[i]);
+            temp.setGravity(Gravity.CENTER);
+//            temp.setBackgroundColor(Color.WHITE);
             temp.setShadowLayer((float) 1.6, (float) -1.5, (float) 1.3, -1);
 
             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) friend.getLayoutParams();
@@ -130,11 +137,12 @@ public class CompassActivity extends AppCompatActivity {
             copy.circleAngle = i*50;
             copy.circleRadius = 500;
             copy.height = 50;
-            copy.width = 250;
+            copy.width = 500;
 
             temp.setLayoutParams(copy);
             dot.setLayoutParams(copy);
 
+            dots.add(dot);
             friends.add(temp);
         }
 
@@ -152,25 +160,45 @@ public class CompassActivity extends AppCompatActivity {
     }
     public void updateLoc(int i) {
         TextView currView = friends.get(i);
+        ImageView currDot = dots.get(i);
         Location currLoc = locs.get(i);
         currView.setText(currLoc.label);
-        renderText(currView, currLoc.latitude, currLoc.longitude);
+        currView.setBackgroundColor(Color.WHITE);
+        renderText(currView, currDot, currLoc.latitude, currLoc.longitude);
+        handleCollisions(currView, i);
     }
 
-    void renderText(TextView text, double otherLat, double otherLon) {
+    void renderText(TextView text, ImageView dot, double otherLat, double otherLon) {
         double degrees = angleFromCoordinate(lat, lon, otherLat, otherLon);
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) text.getLayoutParams();
         layoutParams.circleAngle = (float)(degrees-orient*(180 / Math.PI));
-        // TODO: add this line
         double locDist = distInMiles(otherLat, otherLon, lat, lon);
-        if (locDist > zoom_max){
+        if (locDist > zoom_max) {
             layoutParams.circleRadius = 500;
             text.setVisibility(View.INVISIBLE);
+            dot.setVisibility(View.VISIBLE);
         } else {
             layoutParams.circleRadius = (int) (locDist * constraintZoomRatio);
             text.setVisibility(View.VISIBLE);
+            dot.setVisibility(View.INVISIBLE);
         }
+        TextPaint paint = text.getPaint();
+        layoutParams.width= (int) paint.measureText(text.getText().toString());
         text.setLayoutParams(layoutParams);
+    }
+
+    void handleCollisions(TextView text, int num) {
+        for(int i=0; i<num-1; i++) {
+            TextView otherView = friends.get(i);
+            ConstraintLayout.LayoutParams textParams = (ConstraintLayout.LayoutParams) text.getLayoutParams();
+            ConstraintLayout.LayoutParams otherParams = (ConstraintLayout.LayoutParams) otherView.getLayoutParams();
+            if(Math.abs(otherParams.circleRadius-textParams.circleRadius)<100
+            &&Math.abs(otherParams.circleAngle-textParams.circleAngle)<50) {
+                textParams.circleRadius-=Math.signum(otherParams.circleRadius-textParams.circleRadius)*50;
+//                Log.i("new rad", textParams.circleRadius+"");
+            }
+            text.setLayoutParams(textParams);
+        }
     }
 
     public void onLocChanged(Location changeLoc) {

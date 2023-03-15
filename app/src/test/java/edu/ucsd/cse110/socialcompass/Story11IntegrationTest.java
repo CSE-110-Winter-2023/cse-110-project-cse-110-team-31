@@ -4,6 +4,7 @@ import android.os.Looper;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -94,19 +95,21 @@ public class Story11IntegrationTest {
                 // UTC
                 if (activity.uids[i].equals("ken_test2")) {
                     TextView locView = activity.friends.get(i);
+                    ImageView dotView = activity.dots.get(i);
                     Location currLoc = activity.locs.get(i);
                     currLoc.latitude = 32.871688;
                     currLoc.longitude = -117.213486;
-                    activity.renderText(locView, currLoc.latitude, currLoc.longitude);
+                    activity.renderText(locView, dotView, currLoc.latitude, currLoc.longitude);
                     var layoutParams = (ConstraintLayout.LayoutParams) locView.getLayoutParams();
                     assert layoutParams.circleRadius > 1.4 * activity.constraintZoomRatio &&
                             layoutParams.circleRadius < 1.7 * activity.constraintZoomRatio;
                 } else if (activity.uids[i].equals("ken_test4")) {
                     TextView locView = activity.friends.get(i);
+                    ImageView dotView = activity.dots.get(i);
                     Location currLoc = activity.locs.get(i);
                     currLoc.latitude = 32.850343;
                     currLoc.longitude = -117.27264;
-                    activity.renderText(locView, currLoc.latitude, currLoc.longitude);
+                    activity.renderText(locView, dotView, currLoc.latitude, currLoc.longitude);
                     var layoutParams = (ConstraintLayout.LayoutParams) locView.getLayoutParams();
                     assert layoutParams.circleRadius > 2.8 * activity.constraintZoomRatio &&
                             layoutParams.circleRadius < 3.1 * activity.constraintZoomRatio;
