@@ -1,6 +1,9 @@
 package edu.ucsd.cse110.socialcompass.model;
 
 import android.util.Log;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.time.Duration;
 import java.time.temporal.Temporal;
@@ -13,17 +16,20 @@ import java.util.concurrent.TimeoutException;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicReference;
 
+import edu.ucsd.cse110.socialcompass.R;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.json.JSONObject;
 
-public class LocationAPI {
+public class LocationAPI extends AppCompatActivity {
 
     private LocalDateTime dateTimeConnected;
     private volatile static LocationAPI instance = null;
     private OkHttpClient client;
+
+
 
     public LocationAPI() {
         this.client = new OkHttpClient();
@@ -38,12 +44,23 @@ public class LocationAPI {
 
     public void diffTime(){
         LocalDateTime dateTime1 = LocalDateTime.now();
-
         Duration duration = Duration.between(dateTime1, dateTimeConnected);
         long diff = Math.abs(duration.toMinutes());
-        Log.i("Something Offensive",String.valueOf(diff));
-    }
 
+        if (diff>=60){
+            diff = Math.abs(duration.toHours());
+        }
+        Log.i("Something Offensive",String.valueOf(diff));
+
+        TextView time_stamp = findViewById(R.id.timeDisconnect);
+        time_stamp.setText(String.valueOf(diff));
+    }
+/*
+    public void setName(String name){
+        TextView enter_name = findViewById(R.id.timeDisconnect);
+        enter_name.setText(diffTime);
+    }
+*/
     public Location getLocation(String title) throws ExecutionException, InterruptedException, TimeoutException {
 
         Log.i("GET", title);
@@ -85,7 +102,7 @@ public class LocationAPI {
                     .build();
             //dateTime3 = LocalDateTime.now();
             dateTime.set(LocalDateTime.now());
-            Log.i("Sex", locJson + " " + loc.UID + " " + dateTime);
+//            Log.i("Sex", locJson + " " + loc.UID + " " + dateTime);
             try (var response = client.newCall(request).execute()) {
                 assert response.body() != null;
             } catch (Exception e) {
