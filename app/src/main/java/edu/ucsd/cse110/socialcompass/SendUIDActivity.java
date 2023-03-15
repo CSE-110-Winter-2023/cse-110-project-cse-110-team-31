@@ -34,7 +34,7 @@ public class SendUIDActivity extends AppCompatActivity {
     }
 
 
-    public void onNextBtnClicked(View view) {
+    public void onContinueBtnClicked(View view) {
         Intent intent = new Intent(this,AddFriendActivity.class);
         startActivity(intent);
     }
