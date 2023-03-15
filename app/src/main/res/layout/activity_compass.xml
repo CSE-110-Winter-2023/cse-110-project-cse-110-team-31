@@ -128,11 +128,11 @@
 
         <ImageView
             android:id="@+id/redDot"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="10dp"
-            tools:layout_editor_absoluteY="44dp" />
+            android:layout_width="26dp"
+            android:layout_height="27dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
         <ImageView
             android:id="@+id/greenDot"
@@ -140,7 +140,7 @@
             android:layout_height="27dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/green_dot" />
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

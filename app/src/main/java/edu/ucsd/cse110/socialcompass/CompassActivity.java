@@ -309,14 +309,22 @@ public class CompassActivity extends AppCompatActivity {
         LocalDateTime sixMinutesBehind = now.minusMinutes(60);
 
         if (dateTimeConnected!=null) {
-            Duration duration = Duration.between(now, sixMinutesBehind);//dateTimeConnected);
+            Duration duration = Duration.between(now, dateTimeConnected);//dateTimeConnected);
             long diff = Math.abs(duration.toMinutes());
+            if (diff>1){
+                ImageView image = findViewById(R.id.redDot);
+                image.setImageResource(R.drawable.red_dot);
+            }
+            else{
+                ImageView image = findViewById(R.id.greenDot);
+                image.setImageResource(R.drawable.green_dot);
+            }
             if (diff>=60){
                 diff = Math.abs(duration.toHours());
                 TextView time_stamp = findViewById(R.id.timeDisconnect);
                 time_stamp.setText(String.valueOf(diff)+" "+"hours");
-                ImageView image = findViewById(R.id.greenDot);
-                image.setImageResource(R.drawable.green_dot);
+                //ImageView image = findViewById(R.id.greenDot);
+                //image.setImageResource(R.drawable.green_dot);
             }
             else{
                 TextView time_stamp = findViewById(R.id.timeDisconnect);
