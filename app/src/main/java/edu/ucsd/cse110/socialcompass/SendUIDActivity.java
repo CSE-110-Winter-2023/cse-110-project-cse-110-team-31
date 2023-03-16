@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,7 +20,13 @@ public class SendUIDActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_uid);
 
-        generateAndSetUID();
+        SharedPreferences preferences = getSharedPreferences("UID", MODE_PRIVATE);
+        String user_id = preferences.getString("UID", null);
+
+        if(user_id == null) {
+            generateAndSetUID();
+        }
+        setUID();
     }
 
     public void generateAndSetUID() {
@@ -32,15 +39,20 @@ public class SendUIDActivity extends AppCompatActivity {
         editor.clear();
         editor.putString("UID", uid);
         editor.apply();
+    }
 
+    public void setUID() {
+        SharedPreferences preferences = getSharedPreferences("UID", MODE_PRIVATE);
         //get uid from shared preferences
         String user_id = preferences.getString("UID", null);
 
         //set the uid textview
         TextView uidBox = findViewById(R.id.uidCodeView);
         if(user_id != null) {
-            uidBox.setText(uid);
+            Log.d("tag", "user id not null");
+            uidBox.setText(user_id);
         } else {
+            Log.d("tag", "user id IS NULL");
             Utilities.showAlert(this,"SYSTEM ERROR", "UNABLE TO FIND UID");
         }
     }
