@@ -30,9 +30,6 @@ public class Story11IntegrationTest {
     @Rule
     public GrantPermissionRule coarsePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_COARSE_LOCATION);
 
-
-
-
     @Test
     public void testAtPerimeterIfOutsideZoom() {
         var scenarioAddFriend = ActivityScenario.launch(AddFriendActivity.class);
@@ -115,10 +112,6 @@ public class Story11IntegrationTest {
                     Location currLoc = activity.locs.get(i);
                     currLoc.latitude = 32.850343;
                     currLoc.longitude = -117.27264;
-                    activity.renderText(locView,  currLoc.latitude, currLoc.longitude);
-                    var layoutParams = (ConstraintLayout.LayoutParams) locView.getLayoutParams();
-                    assert layoutParams.circleRadius > 2.8 * activity.constraintZoomRatio &&
-                            layoutParams.circleRadius < 3.1 * activity.constraintZoomRatio;
                     activity.renderText(locView, dotView, currLoc.latitude, currLoc.longitude);
                     var layoutParams2 = (ConstraintLayout.LayoutParams) locView.getLayoutParams();
                     assert layoutParams2.circleRadius > 250 &&

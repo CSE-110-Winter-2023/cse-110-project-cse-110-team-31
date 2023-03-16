@@ -58,10 +58,11 @@ public class Story13IntegrationTest {
             for(int i=0; i<activity.uids.length; i++) {
                 if(activity.uids[i].equals("stacy_scenario1")) {
                     TextView locView= activity.friends.get(i);
+                    ImageView dotView = activity.dots.get(i);
                     Location currLoc = activity.locs.get(i);
                     currLoc.latitude = 32.871688;
                     currLoc.longitude = -117.213486;
-                    activity.renderText(locView, currLoc.latitude, currLoc.longitude);
+                    activity.renderText(locView, dotView, currLoc.latitude, currLoc.longitude);
                     var layoutParams = (ConstraintLayout.LayoutParams) locView.getLayoutParams();
                     assert layoutParams.circleRadius == 500;
                     assert locView.getVisibility() == View.INVISIBLE;
@@ -108,20 +109,22 @@ public class Story13IntegrationTest {
             for(int i=0; i<activity.uids.length; i++) {
                 if (activity.uids[i].equals("brandon_scenario2")) {
                     TextView locView = activity.friends.get(i);
+                    ImageView dotView = activity.dots.get(i);
                     Location currLoc = activity.locs.get(i);
                     currLoc.latitude = 32.971688;
                     currLoc.longitude = -117.213486;
-                    activity.renderText(locView, currLoc.latitude, currLoc.longitude);
+                    activity.renderText(locView, dotView, currLoc.latitude, currLoc.longitude);
                     var layoutParams = (ConstraintLayout.LayoutParams) locView.getLayoutParams();
                     System.out.println(layoutParams.circleRadius);
                     assert layoutParams.circleRadius < 500;
                     assert locView.getVisibility() == View.VISIBLE;
                 } else if (activity.uids[i].equals("john_scenario2")) {
                     TextView locView2 = activity.friends.get(i);
+                    ImageView dotView2 = activity.dots.get(i);
                     Location currLoc2 = activity.locs.get(i);
                     currLoc2.latitude = 32.881688;
                     currLoc2.longitude = -117.233486;
-                    activity.renderText(locView2, currLoc2.latitude, currLoc2.longitude);
+                    activity.renderText(locView2, dotView2, currLoc2.latitude, currLoc2.longitude);
                     var layoutParams2 = (ConstraintLayout.LayoutParams) locView2.getLayoutParams();
                     System.out.println(layoutParams2.circleRadius);
                     assert layoutParams2.circleRadius < (int)(2.75 * (165/2));
