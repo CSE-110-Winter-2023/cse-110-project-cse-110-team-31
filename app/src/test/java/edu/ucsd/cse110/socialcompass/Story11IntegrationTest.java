@@ -4,6 +4,7 @@ import android.os.Looper;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -28,9 +29,6 @@ public class Story11IntegrationTest {
 
     @Rule
     public GrantPermissionRule coarsePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_COARSE_LOCATION);
-
-
-
 
     @Test
     public void testAtPerimeterIfOutsideZoom() {
@@ -100,19 +98,21 @@ public class Story11IntegrationTest {
                 // UTC
                 if (activity.uids[i].equals("ken_test2")) {
                     TextView locView = activity.friends.get(i);
+                    ImageView dotView = activity.dots.get(i);
                     Location currLoc = activity.locs.get(i);
                     currLoc.latitude = 32.871688;
                     currLoc.longitude = -117.213486;
-                    activity.renderText(locView, currLoc.latitude, currLoc.longitude);
+                    activity.renderText(locView, dotView, currLoc.latitude, currLoc.longitude);
                     var layoutParams = (ConstraintLayout.LayoutParams) locView.getLayoutParams();
                     assert layoutParams.circleRadius > 230 &&
                             layoutParams.circleRadius < 240;
                 } else if (activity.uids[i].equals("ken_test3")) {
                     TextView locView = activity.friends.get(i);
+                    ImageView dotView = activity.dots.get(i);
                     Location currLoc = activity.locs.get(i);
                     currLoc.latitude = 32.850343;
                     currLoc.longitude = -117.27264;
-                    activity.renderText(locView, currLoc.latitude, currLoc.longitude);
+                    activity.renderText(locView, dotView, currLoc.latitude, currLoc.longitude);
                     var layoutParams2 = (ConstraintLayout.LayoutParams) locView.getLayoutParams();
                     assert layoutParams2.circleRadius > 250 &&
                             layoutParams2.circleRadius < 270;
