@@ -70,6 +70,17 @@ public class AddFriendActivity extends AppCompatActivity {
     }
 
     public void onContinueButtonClicked(View view) {
+        SharedPreferences preferences = getSharedPreferences("URL", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        TextView urlView = findViewById(R.id.mockUrl);
+        editor.clear();
+        if(!urlView.getText().toString().equals("")) {
+            editor.putString("url", urlView.getText().toString());
+        }
+
+        editor.apply();
+
         Intent intent = new Intent(this, CompassActivity.class);
         startActivity(intent);
     }

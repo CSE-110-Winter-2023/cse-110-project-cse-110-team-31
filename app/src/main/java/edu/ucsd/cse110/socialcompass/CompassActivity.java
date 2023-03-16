@@ -103,6 +103,8 @@ public class CompassActivity extends AppCompatActivity {
 
         readLabelFromSP();
 
+        updateMockedUrl();
+
         loc = new Location(UID);
         api = LocationAPI.provide();
         loc.label = label;
@@ -118,6 +120,18 @@ public class CompassActivity extends AppCompatActivity {
 
         setUpZoom();
 
+    }
+
+    public void updateMockedUrl() {
+        SharedPreferences preferences = getSharedPreferences("URL", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        if(preferences.contains("url")) {
+            LocationAPI.setUrl(preferences.getString("url", ""));
+        }
+
+        editor.clear();
+        editor.apply();
     }
 
     public void setUpUIDs() {

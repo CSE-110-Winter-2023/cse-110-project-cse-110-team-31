@@ -28,11 +28,14 @@ public class LocationAPI extends AppCompatActivity {
     private LocalDateTime dateTimeConnected;
     private volatile static LocationAPI instance = null;
     private OkHttpClient client;
-
-
+    public static String url="https://socialcompass.goto.ucsd.edu/location/";
 
     public LocationAPI() {
         this.client = new OkHttpClient();
+    }
+
+    public static void setUrl(String url) {
+        LocationAPI.url = url;
     }
 
     public static LocationAPI provide() {
@@ -55,18 +58,13 @@ public class LocationAPI extends AppCompatActivity {
         TextView time_stamp = findViewById(R.id.timeDisconnect);
         time_stamp.setText(String.valueOf(diff));
     }
-/*
-    public void setName(String name){
-        TextView enter_name = findViewById(R.id.timeDisconnect);
-        enter_name.setText(diffTime);
-    }
-*/
+
     public Location getLocation(String title) throws ExecutionException, InterruptedException, TimeoutException {
 
         Log.i("GET", title);
 
         var request = new Request.Builder()
-                .url("https://socialcompass.goto.ucsd.edu/location/" + title)
+                .url(url + title)
                 .method("GET", null)
                 .build();
 
@@ -96,7 +94,7 @@ public class LocationAPI extends AppCompatActivity {
         Thread putThread = new Thread(() -> {
             var body = RequestBody.create(locJson, JSON);
             Request request = new Request.Builder()
-                    .url("https://socialcompass.goto.ucsd.edu/location/" + loc.UID)
+                    .url(url + loc.UID)
                     .put(body)
                     .build();
             dateTime.set(LocalDateTime.now());
@@ -122,7 +120,7 @@ public class LocationAPI extends AppCompatActivity {
         Thread putThread = new Thread(() -> {
             var body = RequestBody.create(locJson, JSON);
             Request request = new Request.Builder()
-                    .url("https://socialcompass.goto.ucsd.edu/location/" + loc.UID)
+                    .url(url + loc.UID)
                     .patch(body)
                     .build();
             try (var response = client.newCall(request).execute()) {
@@ -143,7 +141,7 @@ public class LocationAPI extends AppCompatActivity {
         Thread putThread = new Thread(() -> {
             var body = RequestBody.create(locJson, JSON);
             Request request = new Request.Builder()
-                    .url("https://socialcompass.goto.ucsd.edu/location/" + loc.UID)
+                    .url(url + loc.UID)
                     .delete(body)
                     .build();
             try (var response = client.newCall(request).execute()) {
