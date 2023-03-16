@@ -4,6 +4,7 @@ import android.os.Looper;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -46,8 +47,9 @@ public class Story11IntegrationTest {
         scenario.moveToState(Lifecycle.State.STARTED);
 
         scenario.onActivity(activity -> {
+            activity.curr_zoom = 10;
+            activity.updateAllLocs();
             // setting it to be Geisel library for standardized purposes of Github CI
-            activity.setZoomToDefault();
             activity.lon = -117.2376;
             activity.lat = 32.8811;
             for(int i=0; i<activity.uids.length; i++) {
@@ -76,7 +78,7 @@ public class Story11IntegrationTest {
             Button submit_button = (Button) activity.findViewById(R.id.addFriendSubmitButton);
             uidEntry.setText("ken_test2");
             submit_button.performClick();
-            uidEntry.setText("ken_test4");
+            uidEntry.setText("ken_test3");
             submit_button.performClick();
         });
 
@@ -85,7 +87,9 @@ public class Story11IntegrationTest {
         scenario.moveToState(Lifecycle.State.STARTED);
 
         scenario.onActivity(activity -> {
-            activity.setZoomToDefault();
+            activity.curr_zoom = 10;
+            activity.zoom_curr_ind = 1;
+            activity.updateAllLocs();
             // setting it to be Geisel library for standardized purposes of Github CI
             activity.lon = -117.2376;
             activity.lat = 32.8811;
@@ -94,24 +98,27 @@ public class Story11IntegrationTest {
                 // UTC
                 if (activity.uids[i].equals("ken_test2")) {
                     TextView locView = activity.friends.get(i);
+                    ImageView dotView = activity.dots.get(i);
                     Location currLoc = activity.locs.get(i);
                     currLoc.latitude = 32.871688;
                     currLoc.longitude = -117.213486;
-                    activity.renderText(locView, currLoc.latitude, currLoc.longitude);
+                    activity.renderText(locView, dotView, currLoc.latitude, currLoc.longitude);
                     var layoutParams = (ConstraintLayout.LayoutParams) locView.getLayoutParams();
-                    assert layoutParams.circleRadius > 1.4 * activity.constraintZoomRatio &&
-                            layoutParams.circleRadius < 1.7 * activity.constraintZoomRatio;
-                } else if (activity.uids[i].equals("ken_test4")) {
+                    assert layoutParams.circleRadius > 230 &&
+                            layoutParams.circleRadius < 240;
+                } else if (activity.uids[i].equals("ken_test3")) {
                     TextView locView = activity.friends.get(i);
+                    ImageView dotView = activity.dots.get(i);
                     Location currLoc = activity.locs.get(i);
                     currLoc.latitude = 32.850343;
                     currLoc.longitude = -117.27264;
-                    activity.renderText(locView, currLoc.latitude, currLoc.longitude);
-                    var layoutParams = (ConstraintLayout.LayoutParams) locView.getLayoutParams();
-                    assert layoutParams.circleRadius > 2.8 * activity.constraintZoomRatio &&
-                            layoutParams.circleRadius < 3.1 * activity.constraintZoomRatio;
+                    activity.renderText(locView, dotView, currLoc.latitude, currLoc.longitude);
+                    var layoutParams2 = (ConstraintLayout.LayoutParams) locView.getLayoutParams();
+                    assert layoutParams2.circleRadius > 250 &&
+                            layoutParams2.circleRadius < 270;
                 }
             }
+
 
             /*
              * Leaving this section commented. We can't seem to get activity.locs.get(i) to not
@@ -170,7 +177,8 @@ public class Story11IntegrationTest {
 
         scenario.onActivity(activity -> {
             // setting it to be Geisel library for standardized purposes of Github CI
-            activity.setZoomToDefault();
+            activity.curr_zoom = 10;
+            activity.updateAllLocs();
             activity.lon = -117.2376;
             activity.lat = 32.8811;
             for(int i=0; i<activity.uids.length; i++) {
