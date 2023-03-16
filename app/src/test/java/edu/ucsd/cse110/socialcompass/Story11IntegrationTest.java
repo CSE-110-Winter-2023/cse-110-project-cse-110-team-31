@@ -50,7 +50,6 @@ public class Story11IntegrationTest {
 
         scenario.onActivity(activity -> {
             activity.curr_zoom = 10;
-            activity.constraintZoomRatio = (double) activity.constraint_size/activity.curr_zoom;
             activity.updateAllLocs();
             // setting it to be Geisel library for standardized purposes of Github CI
             activity.lon = -117.2376;
@@ -179,7 +178,6 @@ public class Story11IntegrationTest {
         scenario.onActivity(activity -> {
             // setting it to be Geisel library for standardized purposes of Github CI
             activity.curr_zoom = 10;
-            activity.constraintZoomRatio = (double) activity.constraint_size/activity.curr_zoom;
             activity.updateAllLocs();
             activity.lon = -117.2376;
             activity.lat = 32.8811;

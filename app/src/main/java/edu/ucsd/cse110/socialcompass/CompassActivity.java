@@ -60,13 +60,8 @@ public class CompassActivity extends AppCompatActivity {
     ArrayList<TextView> friends;
 
     Integer[] zoom_sizes = {1, 10, 500};
-    int zoom_curr_ind = 0;
-
-    int curr_zoom = zoom_sizes[0];
-
-    int constraint_size = 320;
-
-    double constraintZoomRatio = (double) constraint_size/curr_zoom;
+    int zoom_curr_ind;
+    int curr_zoom;
 
     boolean houseDisplay, friendDisplay, familyDisplay;
     double friendLat, friendLon;
@@ -100,6 +95,9 @@ public class CompassActivity extends AppCompatActivity {
         getUIDs();
 
         setUpUIDs();
+
+        setUpZoom();
+
     }
 
     public void setUpUIDs() {
@@ -191,11 +189,23 @@ public class CompassActivity extends AppCompatActivity {
         }
     }
 
+    void setUpZoom(){
+        SharedPreferences preferences = getSharedPreferences("last_zoom", MODE_PRIVATE);
+        zoom_curr_ind = Integer.parseInt(preferences.getString("last_zoom", "0"));
+        curr_zoom = zoom_sizes[zoom_curr_ind];
+        showCorrectCircles();
+    }
+
     void setZoom(){
         curr_zoom = zoom_sizes[zoom_curr_ind];
-        constraintZoomRatio = (double) constraint_size/curr_zoom;
         updateAllLocs();
         showCorrectCircles();
+
+        SharedPreferences preferences = getSharedPreferences("last_zoom", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString("last_zoom", String.valueOf(zoom_curr_ind));
+        editor.apply();
     }
 
     void zoomIn() {
@@ -246,7 +256,7 @@ public class CompassActivity extends AppCompatActivity {
             text.setVisibility(View.INVISIBLE);
         } else {
             layoutParams.circleRadius = calculateConstraintFromDist(locDist);
-            Log.i("CURRENT RADIUS", text.getText() + " " + String.valueOf(layoutParams.circleRadius));
+            //Log.i("CURRENT RADIUS", text.getText() + " " + String.valueOf(layoutParams.circleRadius));
             text.setVisibility(View.VISIBLE);
         }
         text.setLayoutParams(layoutParams);
