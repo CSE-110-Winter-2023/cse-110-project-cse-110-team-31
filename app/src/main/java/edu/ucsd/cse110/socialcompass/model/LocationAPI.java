@@ -114,7 +114,7 @@ public class LocationAPI extends AppCompatActivity {
         Duration duration = Duration.between(dateTime2, dateTime3);
         long diff = Math.abs(duration.toMinutes());
         //var diff = dateTime2-dateTime;
-        Log.i("FUCK",String.valueOf(diff));
+        Log.i("hello",String.valueOf(diff));
     }
 
     public void patchLocation(Location loc) {

@@ -49,7 +49,9 @@ public class CompassActivity extends AppCompatActivity {
     public LocationService locationService;
     public OrientationService orientationService;
 
-    private LocalDateTime dateTimeConnected;
+    LocalDateTime dateTimeConnected;
+
+    LocalDateTime now;
 
     Location loc;
     LocationAPI api;
@@ -305,7 +307,7 @@ public class CompassActivity extends AppCompatActivity {
     public void diffTime(){
         LocalDateTime dateTime1 = LocalDateTime.now();
         Log.i("Bagels rock",String.valueOf(String.valueOf(dateTime1)));
-        LocalDateTime now = LocalDateTime.now();
+        now = LocalDateTime.now();
         LocalDateTime sixMinutesBehind = now.minusMinutes(60);
 
         if (dateTimeConnected!=null) {
