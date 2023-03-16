@@ -128,6 +128,30 @@
             app:layout_constraintEnd_toStartOf="@+id/family"
             app:layout_constraintStart_toEndOf="@+id/family" />
 
+        <TextView
+            android:id="@+id/timeDisconnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteX="335dp"
+            tools:layout_editor_absoluteY="25dp"
+            tools:ignore="MissingConstraints" />
+
+        <ImageView
+            android:id="@+id/redDot"
+            android:layout_width="26dp"
+            android:layout_height="27dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/greenDot"
+            android:layout_width="26dp"
+            android:layout_height="27dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
         <Button
             android:id="@+id/zoom_in_button"
             android:layout_width="40dp"
@@ -177,6 +201,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.498"
             app:srcCompat="@drawable/circle_1" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,23 +1,35 @@
 package edu.ucsd.cse110.socialcompass.model;
 
 import android.util.Log;
+import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.time.Duration;
+import java.time.temporal.Temporal;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicReference;
 
+import edu.ucsd.cse110.socialcompass.R;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import org.json.JSONObject;
 
-public class LocationAPI {
+public class LocationAPI extends AppCompatActivity {
 
+    private LocalDateTime dateTimeConnected;
     private volatile static LocationAPI instance = null;
     private OkHttpClient client;
+
+
 
     public LocationAPI() {
         this.client = new OkHttpClient();
@@ -30,6 +42,25 @@ public class LocationAPI {
         return instance;
     }
 
+    public void diffTime(){
+        LocalDateTime dateTime1 = LocalDateTime.now();
+        Duration duration = Duration.between(dateTime1, dateTimeConnected);
+        long diff = Math.abs(duration.toMinutes());
+
+        if (diff>=60){
+            diff = Math.abs(duration.toHours());
+        }
+        Log.i("Something Offensive",String.valueOf(diff));
+
+        TextView time_stamp = findViewById(R.id.timeDisconnect);
+        time_stamp.setText(String.valueOf(diff));
+    }
+/*
+    public void setName(String name){
+        TextView enter_name = findViewById(R.id.timeDisconnect);
+        enter_name.setText(diffTime);
+    }
+*/
     public Location getLocation(String title) throws ExecutionException, InterruptedException, TimeoutException {
 
         Log.i("GET", title);
@@ -45,6 +76,9 @@ public class LocationAPI {
             assert response.body() != null;
             var body = response.body().string();
             Log.i("GET LOCATION", body);
+            JSONObject responseObject = new JSONObject(body);
+            String updatedAt = responseObject.getString("updated_at");
+            Log.i("GET LOCATION2",updatedAt);
             return Location.fromJSON(body);
         };
         Future<Location> future_get = executor.submit(callable);
@@ -52,16 +86,20 @@ public class LocationAPI {
     }
 
     public void putLocation(Location loc) {
+        dateTimeConnected = LocalDateTime.now();
         final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+        AtomicReference<LocalDateTime> dateTime = new AtomicReference<>(LocalDateTime.now());
+        LocalDateTime dateTime3 = LocalDateTime.now();
+        String locJson = loc.toLimitedJSON(new String[]{"private_code", "label", "latitude", "longitude", "time"});
+        Log.i("PUTLOC JSON", locJson + " " + loc.UID);
 
-        String locJson = loc.toLimitedJSON(new String[]{"private_code", "label", "latitude", "longitude"});
-        Log.i("PUTLOC JSON", locJson + " " +loc.UID);
         Thread putThread = new Thread(() -> {
             var body = RequestBody.create(locJson, JSON);
             Request request = new Request.Builder()
                     .url("https://socialcompass.goto.ucsd.edu/location/" + loc.UID)
                     .put(body)
                     .build();
+            dateTime.set(LocalDateTime.now());
             try (var response = client.newCall(request).execute()) {
                 assert response.body() != null;
             } catch (Exception e) {
@@ -69,6 +107,10 @@ public class LocationAPI {
             }
         });
         putThread.start();
+        LocalDateTime dateTime2 = LocalDateTime.now();
+        Duration duration = Duration.between(dateTime2, dateTime3);
+        long diff = Math.abs(duration.toMinutes());
+        Log.i("hello",String.valueOf(diff));
     }
 
     public void patchLocation(Location loc) {

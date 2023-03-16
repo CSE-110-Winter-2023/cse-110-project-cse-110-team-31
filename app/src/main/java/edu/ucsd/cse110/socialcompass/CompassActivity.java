@@ -1,6 +1,7 @@
 package edu.ucsd.cse110.socialcompass;
 
 import static android.view.View.INVISIBLE;
+import java.util.concurrent.TimeUnit;
 import static android.view.View.TEXT_ALIGNMENT_CENTER;
 
 import static java.security.AccessController.getContext;
@@ -13,6 +14,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.Period;
 
 import android.Manifest;
 import android.content.Context;
@@ -21,6 +25,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.Gravity;
@@ -30,10 +35,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import edu.ucsd.cse110.socialcompass.model.Location;
@@ -44,6 +56,10 @@ import edu.ucsd.cse110.socialcompass.model.LocationViewModel;
 public class CompassActivity extends AppCompatActivity {
     public LocationService locationService;
     public OrientationService orientationService;
+
+    LocalDateTime dateTimeConnected;
+
+    LocalDateTime now;
 
     Location loc;
     LocationAPI api;
@@ -155,6 +171,8 @@ public class CompassActivity extends AppCompatActivity {
 
         showCorrectCircles();
         friend.setVisibility(INVISIBLE);
+
+        setupTimeUpdates();
     }
     public void readLabelFromSP() {
         SharedPreferences preferences = getSharedPreferences("Name", MODE_PRIVATE);
@@ -393,8 +411,54 @@ public class CompassActivity extends AppCompatActivity {
         }
     }
 
+    Handler handler = new Handler();
+    Runnable runnable;
+    public void setupTimeUpdates() {
+        handler.postDelayed( runnable = new Runnable() {
+            public void run() {
+                Log.i("this is running", "run");
+                diffTime();
+
+                handler.postDelayed(runnable, 1000);
+            }
+        }, 1000);
+    }
+
+    public void diffTime(){
+        LocalDateTime dateTime1 = LocalDateTime.now();
+        Log.i("DateTime1 test",String.valueOf(String.valueOf(dateTime1)));
+        now = LocalDateTime.now();
+        LocalDateTime sixMinutesBehind = now.minusMinutes(60);
+
+        if (dateTimeConnected!=null) {
+            Duration duration = Duration.between(now, dateTimeConnected);//dateTimeConnected);
+            long diff = Math.abs(duration.toMinutes());
+            if (diff>1){
+                ImageView image = findViewById(R.id.redDot);
+                image.setImageResource(R.drawable.red_dot);
+            }
+            else{
+                ImageView image = findViewById(R.id.greenDot);
+                image.setImageResource(R.drawable.green_dot);
+            }
+            if (diff>=60){
+                diff = Math.abs(duration.toHours());
+                TextView time_stamp = findViewById(R.id.timeDisconnect);
+                time_stamp.setText(String.valueOf(diff)+" "+"hours");
+            }
+            else{
+                TextView time_stamp = findViewById(R.id.timeDisconnect);
+                time_stamp.setText(String.valueOf(diff)+" "+"minutes");
+
+            }
+            Log.i("Diff test",String.valueOf(String.valueOf(diff)));
+        }
+    }
+
     void updateLocation() {
         locationService.getLocation().observe(this, location -> {
+            dateTimeConnected = LocalDateTime.now();
+            Log.i("Something Offensive69",String.valueOf(dateTimeConnected));
             lat = location.first;
             lon = location.second;
             loc.latitude = location.first;
