@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -18,13 +19,31 @@ public class SendUIDActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_uid);
 
-        //TODO:get UID from shared preferences
-        //mocking for right now with random uid
-        uid = "sidtest123";
-        TextView uidBox = findViewById(R.id.uidCodeView);
-        uidBox.setText(uid);
+        generateAndSetUID();
     }
 
+    public void generateAndSetUID() {
+        //generate a random UID
+        uid = Utilities.generateUID();
+
+        //Store it into shared preferences
+        SharedPreferences preferences = getSharedPreferences("UID", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.putString("UID", uid);
+        editor.apply();
+
+        //get uid from shared preferences
+        String user_id = preferences.getString("UID", null);
+
+        //set the uid textview
+        TextView uidBox = findViewById(R.id.uidCodeView);
+        if(user_id != null) {
+            uidBox.setText(uid);
+        } else {
+            Utilities.showAlert(this,"SYSTEM ERROR", "UNABLE TO FIND UID");
+        }
+    }
 
     public void onCopyBtnClicked(View view) {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
