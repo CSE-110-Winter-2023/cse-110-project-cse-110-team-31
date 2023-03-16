@@ -284,16 +284,9 @@ public class CompassActivity extends AppCompatActivity {
         }
     }
 
-//    private ScheduledFuture<?> timeUpdater;
     Handler handler = new Handler();
     Runnable runnable;
     public void setupTimeUpdates() {
-//        Log.i("setting time", "setup update");
-//        var executor = Executors.newSingleThreadScheduledExecutor();
-//        timeUpdater=executor.scheduleAtFixedRate(() -> {
-//            Log.i("updating time", "updated time to something");
-//            diffTime();
-//        }, 0, 1000, TimeUnit.MILLISECONDS);
         handler.postDelayed( runnable = new Runnable() {
             public void run() {
                 Log.i("this is running", "run");
@@ -325,8 +318,6 @@ public class CompassActivity extends AppCompatActivity {
                 diff = Math.abs(duration.toHours());
                 TextView time_stamp = findViewById(R.id.timeDisconnect);
                 time_stamp.setText(String.valueOf(diff)+" "+"hours");
-                //ImageView image = findViewById(R.id.greenDot);
-                //image.setImageResource(R.drawable.green_dot);
             }
             else{
                 TextView time_stamp = findViewById(R.id.timeDisconnect);
