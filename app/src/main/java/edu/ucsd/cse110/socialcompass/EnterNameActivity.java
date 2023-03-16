@@ -56,8 +56,7 @@ public class EnterNameActivity extends AppCompatActivity {
     }
 
     public void nextPage(){
-        // TODO: change AddFriendActivity to 2.2 wireframe class ExchangeFriendUIDActivity
-        Intent intent = new Intent(this, AddFriendActivity.class);
+        Intent intent = new Intent(this, SendUIDActivity.class);
         startActivity(intent);
     }
 

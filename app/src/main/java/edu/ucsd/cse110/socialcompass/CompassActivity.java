@@ -64,9 +64,8 @@ public class CompassActivity extends AppCompatActivity {
     Location loc;
     LocationAPI api;
 
-    // TODO: these two need to be updated by sharedpreferences or something
-    String UID = "ranatest4";
-    String label = "";
+    String UID;
+    String label;
     String priv_key = "notouch";
 
     double lat, lon;
@@ -92,6 +91,12 @@ public class CompassActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compass);
+
+        //load in name and UID from shared preferences
+        SharedPreferences preferencesUID = getSharedPreferences("UID", MODE_PRIVATE);
+        SharedPreferences preferencesName = getSharedPreferences("Name", MODE_PRIVATE);
+        UID = preferencesUID.getString("UID",null);
+        label = preferencesName.getString("enter_name",null);
 
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
