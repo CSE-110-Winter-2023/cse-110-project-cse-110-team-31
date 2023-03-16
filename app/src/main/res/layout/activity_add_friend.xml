@@ -75,4 +75,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/removeFriendsButton"
         app:layout_constraintVertical_bias="0.185" />
+
+    <EditText
+        android:id="@+id/mockUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="80dp"
+        android:hint="Enter URL to mock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cont_btn"
+        tools:ignore="TouchTargetSizeCheck" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
