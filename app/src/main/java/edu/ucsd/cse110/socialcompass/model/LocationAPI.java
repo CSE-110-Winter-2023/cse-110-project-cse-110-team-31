@@ -95,14 +95,11 @@ public class LocationAPI extends AppCompatActivity {
 
         Thread putThread = new Thread(() -> {
             var body = RequestBody.create(locJson, JSON);
-            //dateTime.set(LocalDateTime.now());
             Request request = new Request.Builder()
                     .url("https://socialcompass.goto.ucsd.edu/location/" + loc.UID)
                     .put(body)
                     .build();
-            //dateTime3 = LocalDateTime.now();
             dateTime.set(LocalDateTime.now());
-//            Log.i("Sex", locJson + " " + loc.UID + " " + dateTime);
             try (var response = client.newCall(request).execute()) {
                 assert response.body() != null;
             } catch (Exception e) {
@@ -113,7 +110,6 @@ public class LocationAPI extends AppCompatActivity {
         LocalDateTime dateTime2 = LocalDateTime.now();
         Duration duration = Duration.between(dateTime2, dateTime3);
         long diff = Math.abs(duration.toMinutes());
-        //var diff = dateTime2-dateTime;
         Log.i("hello",String.valueOf(diff));
     }
 

@@ -306,7 +306,7 @@ public class CompassActivity extends AppCompatActivity {
 
     public void diffTime(){
         LocalDateTime dateTime1 = LocalDateTime.now();
-        Log.i("Bagels rock",String.valueOf(String.valueOf(dateTime1)));
+        Log.i("DateTime1 test",String.valueOf(String.valueOf(dateTime1)));
         now = LocalDateTime.now();
         LocalDateTime sixMinutesBehind = now.minusMinutes(60);
 
@@ -333,7 +333,7 @@ public class CompassActivity extends AppCompatActivity {
                 time_stamp.setText(String.valueOf(diff)+" "+"minutes");
 
             }
-            Log.i("Bagels suck",String.valueOf(String.valueOf(diff)));
+            Log.i("Diff test",String.valueOf(String.valueOf(diff)));
         }
     }
 
