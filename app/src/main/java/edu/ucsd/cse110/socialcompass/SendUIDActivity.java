@@ -44,13 +44,13 @@ public class SendUIDActivity extends AppCompatActivity {
     public void setUID() {
         SharedPreferences preferences = getSharedPreferences("UID", MODE_PRIVATE);
         //get uid from shared preferences
-        String user_id = preferences.getString("UID", null);
+        uid = preferences.getString("UID", null);
 
         //set the uid textview
         TextView uidBox = findViewById(R.id.uidCodeView);
-        if(user_id != null) {
+        if(uid != null) {
             Log.d("tag", "user id not null");
-            uidBox.setText(user_id);
+            uidBox.setText(uid);
         } else {
             Log.d("tag", "user id IS NULL");
             Utilities.showAlert(this,"SYSTEM ERROR", "UNABLE TO FIND UID");

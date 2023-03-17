@@ -477,7 +477,6 @@ public class CompassActivity extends AppCompatActivity {
     void updateLocation() {
         locationService.getLocation().observe(this, location -> {
             dateTimeConnected = LocalDateTime.now();
-            Log.i("Something Offensive69",String.valueOf(dateTimeConnected));
             lat = location.first;
             lon = location.second;
             loc.latitude = location.first;
